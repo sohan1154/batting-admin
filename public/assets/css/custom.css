@@ -1,0 +1,25 @@
+.error {
+  color: red;
+}
+.error-response {
+  color: red;
+}
+.left {
+  text-align: left;
+}
+.center {
+  text-align: center;
+}
+.right {
+  text-align: right;
+}
+.user-credit {
+  color: green;
+  padding: 0 10px 0 0;
+}
+.in-active {
+  color: #aaaaaa;
+}
+.in-active :hover {
+  color: #ffffff;
+}
