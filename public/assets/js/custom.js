@@ -11,5 +11,12 @@ $(document).ready(function () {
 	// 		table.search($(this).val()).draw();
 	// 	})
 	// }
+
+	$('#listingTable').DataTable({
+		dom: 'Bfrtip',
+		buttons: [
+			'copy', 'csv', 'excel', 'pdf', 'print'
+		]
+	});
 	
 });

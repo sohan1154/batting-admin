@@ -10,7 +10,7 @@ $(document).ready(function () {
             $('#example').DataTable({
                 //DataTable Options
             });
-            $('#example-height').DataTable({
+            $('#listingTable').DataTable({
                 scrollY: '50vh',
                 scrollCollapse: true,
                 paging: false

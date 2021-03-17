@@ -132,7 +132,7 @@ class Sports extends React.Component {
 
                                             <div className="card-body">
                                                 <div className="table-responsive p-t-10">
-                                                    <table id="example-height" className="table   " style={{ width: "100%" }}>
+                                                    <table id="listingTable" className="table " style={{ width: "100%" }}>
                                                         <thead>
                                                             <tr>
                                                                 <th>Sports ID</th>
