@@ -6,16 +6,20 @@ import RecordNotFound from '../../components/elements/RecordNotFound';
 import * as ApisService from "../../providers/apis/apis";
 import { Roller } from "react-awesome-spinners";
 import SideMenuData from '../../components/elements/SideMenuData';
+import queryString from 'query-string';
 
 class Series extends React.Component {
 
     constructor(props) {
         super(props);
 
+        console.log('props::::::::::::::::', props)
+
         this.state = {
             entries: [],
             errors: {},
             loading: false,
+            queryString: queryString.parse(props.location.search),
             currentUser: GlobalProvider.getUser(),
         }
     }
@@ -32,7 +36,10 @@ class Series extends React.Component {
             errors: {},
         });
 
-        ApisService.getSeries()
+        const { queryString } = this.state;
+
+        let params = {sportsID: queryString.sportsID};
+        ApisService.getSeries(params)
             .then(response => {
 
                 if (response.status) {
@@ -99,7 +106,6 @@ class Series extends React.Component {
     render() {
 
         const { entries, loading } = this.state;
-        let count = 1;
 
         return (
             <>
@@ -122,7 +128,7 @@ class Series extends React.Component {
 
                         {loading && <div className="center"><Roller /></div>}
 
-                        {entries.length == 0 && <RecordNotFound />}
+                        {!loading && entries.length == 0 && <RecordNotFound />}
 
                         {entries.length > 0 &&
 
@@ -136,9 +142,11 @@ class Series extends React.Component {
                                                     <table id="example-height" className="table   " style={{ width: "100%" }}>
                                                         <thead>
                                                             <tr>
-                                                                <th>SN.</th>
-                                                                <th>Sports Name</th>
+                                                                <th>Series ID</th>
                                                                 <th>Series Name</th>
+                                                                <th>Sports Name</th>
+                                                                <th>Competition Region</th>
+                                                                <th>Status</th>
                                                                 <th>Actions</th>
                                                             </tr>
                                                         </thead>
@@ -146,9 +154,10 @@ class Series extends React.Component {
 
                                                             {entries.map((item, index) =>
                                                                 <tr key={item.id} id={'RecordID_' + item.id}>
-                                                                    <td>{count++}</td>
-                                                                    <td>{item.sports_name}</td>
+                                                                    <td>{item.competition_id}</td>
                                                                     <td>{item.competition_name}</td>
+                                                                    <td>{item.sports_name}</td>
+                                                                    <td>{item.competitionRegion}</td>
                                                                     <td className="text-align-center">
                                                                         <span className="changeStatus" onClick={() => this.changeStatus(item.id, !item.status)}>
                                                                             {item.status ? (
@@ -157,6 +166,9 @@ class Series extends React.Component {
                                                                                     <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Enable"><i className="mdi mdi-close"></i></button>
                                                                                 )}
                                                                         </span>
+                                                                    </td>
+                                                                    <td className="text-align-center">
+                                                                        <a href={"/matches-listing?seriesID=" + item.id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-secondary" title="Matches"><i className="mdi mdi-format-list-bulleted"></i></a>
                                                                     </td>
                                                                 </tr>
                                                             )}

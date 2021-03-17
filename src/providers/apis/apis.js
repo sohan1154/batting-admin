@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as GlobalProvider from '../globals/globals';
 
-// axios.defaults.baseURL = 'http://localhost:3001';
-axios.defaults.baseURL = 'http://172.104.41.239:3001';
+axios.defaults.baseURL = 'http://localhost:3001';
+// axios.defaults.baseURL = 'http://172.104.41.239:3001';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 function updateHeaders() {
@@ -278,9 +278,9 @@ export const changeSportsStatus = (id, status) => {
 }
 
 // Series
-export const getSeries = () => {
+export const getSeries = (params) => {
     updateHeaders();
-    return axios.get(`/series/listing`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+    return axios.get(`/series/listing`, {params: params}).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
 
 export const changeSeriesStatus = (id, status) => {
@@ -294,9 +294,9 @@ export const deleteSeries = (id, status) => {
 }
 
 // Matches
-export const getMatches = () => {
+export const getMatches = (params) => {
     updateHeaders();
-    return axios.get(`/matches/listing`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+    return axios.get(`/matches/listing`, {params: params}).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
 
 export const changeMatchStatus = (id, status) => {

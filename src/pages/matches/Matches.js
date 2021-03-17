@@ -6,6 +6,7 @@ import RecordNotFound from '../../components/elements/RecordNotFound';
 import * as ApisService from "../../providers/apis/apis";
 import { Roller } from "react-awesome-spinners";
 import SideMenuData from '../../components/elements/SideMenuData';
+import queryString from 'query-string';
 
 class Matches extends React.Component {
 
@@ -16,6 +17,7 @@ class Matches extends React.Component {
             entries: [],
             errors: {},
             loading: false,
+            queryString: queryString.parse(props.location.search),
             currentUser: GlobalProvider.getUser(),
         }
     }
@@ -32,7 +34,10 @@ class Matches extends React.Component {
             errors: {},
         });
 
-        ApisService.getMatches()
+        const { queryString } = this.state;
+
+        let params = {seriesID: queryString.seriesID};
+        ApisService.getMatches(params)
             .then(response => {
 
                 console.log('response:::::::::::', response)
@@ -101,7 +106,6 @@ class Matches extends React.Component {
     render() {
 
         const { entries, loading } = this.state;
-        let count = 1;
 
         return (
             <>
@@ -124,7 +128,7 @@ class Matches extends React.Component {
 
                         {loading && <div className="center"><Roller /></div>}
 
-                        {entries.length == 0 && <RecordNotFound />}
+                        {!loading && entries.length == 0 && <RecordNotFound />}
 
                         {entries.length > 0 &&
 
@@ -138,10 +142,12 @@ class Matches extends React.Component {
                                                     <table id="example-height" className="table   " style={{ width: "100%" }}>
                                                         <thead>
                                                             <tr>
-                                                                <th>SN.</th>
-                                                                <th>Sports Name</th>
-                                                                <th>Series Name</th>
+                                                                <th>Matches ID</th>
                                                                 <th>Matches Name</th>
+                                                                <th>Event Open Date</th>
+                                                                <th>Series Name</th>
+                                                                <th>Sports Name</th>
+                                                                <th>Status</th>
                                                                 <th>Actions</th>
                                                             </tr>
                                                         </thead>
@@ -149,10 +155,11 @@ class Matches extends React.Component {
 
                                                             {entries.map((item, index) =>
                                                                 <tr key={item.id} id={'RecordID_' + item.id}>
-                                                                    <td>{count++}</td>
-                                                                    <td>{item.sports_name}</td>
-                                                                    <td>{item.competition_name}</td>
+                                                                    <td>{item.event_id}</td>
                                                                     <td>{item.event_name}</td>
+                                                                    <td>{item.event_open_date}</td>
+                                                                    <td>{item.competition_name}</td>
+                                                                    <td>{item.sports_name}</td>
                                                                     <td className="text-align-center">
                                                                         <span className="changeStatus" onClick={() => this.changeStatus(item.id, !item.status)}>
                                                                             {item.status ? (
@@ -161,6 +168,9 @@ class Matches extends React.Component {
                                                                                     <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Enable"><i className="mdi mdi-close"></i></button>
                                                                                 )}
                                                                         </span>
+                                                                    </td>
+                                                                    <td className="text-align-center">
+                                                                        <a href={"/match-detail/" + item.id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-info" title="Match Detail"><i className="mdi mdi-eye"></i></a>
                                                                     </td>
                                                                 </tr>
                                                             )}

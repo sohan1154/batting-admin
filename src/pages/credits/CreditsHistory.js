@@ -85,7 +85,7 @@ class CreditsHistory extends React.Component {
 
                         {loading && <div className="center"><Roller /></div>}
 
-                        {entries.length == 0 && <RecordNotFound />}
+                        {!loading && entries.length == 0 && <RecordNotFound />}
 
                         {entries.length > 0 &&
 

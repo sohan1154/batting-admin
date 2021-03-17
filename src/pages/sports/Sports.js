@@ -99,7 +99,6 @@ class Sports extends React.Component {
     render() {
 
         const { entries, loading } = this.state;
-        let count = 1;
 
         return (
             <>
@@ -122,7 +121,7 @@ class Sports extends React.Component {
 
                         {loading && <div className="center"><Roller /></div>}
 
-                        {entries.length == 0 && <RecordNotFound />}
+                        {!loading && entries.length == 0 && <RecordNotFound />}
 
                         {entries.length > 0 &&
 
@@ -136,8 +135,9 @@ class Sports extends React.Component {
                                                     <table id="example-height" className="table   " style={{ width: "100%" }}>
                                                         <thead>
                                                             <tr>
-                                                                <th>SN.</th>
+                                                                <th>Sports ID</th>
                                                                 <th>Sports Name</th>
+                                                                <th>Status</th>
                                                                 <th>Actions</th>
                                                             </tr>
                                                         </thead>
@@ -145,7 +145,7 @@ class Sports extends React.Component {
 
                                                             {entries.map((item, index) =>
                                                                 <tr key={item.id} id={'RecordID_' + item.id}>
-                                                                    <td>{count++}</td>
+                                                                    <td>{item.id}</td>
                                                                     <td>{item.sports_name}</td>
                                                                     <td className="text-align-center">
                                                                         <span className="changeStatus" onClick={() => this.changeStatus(item.id, !item.status)}>
@@ -155,6 +155,9 @@ class Sports extends React.Component {
                                                                                     <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Enable"><i className="mdi mdi-close"></i></button>
                                                                                 )}
                                                                         </span>
+                                                                    </td>
+                                                                    <td className="text-align-center">
+                                                                        <a href={"/series-listing?sportsID=" + item.id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-secondary" title="Series"><i className="mdi mdi-format-list-bulleted"></i></a>
                                                                     </td>
                                                                 </tr>
                                                             )}

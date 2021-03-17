@@ -35,12 +35,18 @@ import PlayerEdit from '../pages/players/PlayerEdit';
 import PlayerResetPassword from '../pages/players/PlayerResetPassword';
 import PlayersArchive from '../pages/players/PlayersArchive';
 
-// others
-import ThirdPartyApis from '../pages/testing/ThirdPartyApis';
-import CreditsHistory from '../pages/credits/CreditsHistory';
+// sports
 import Sports from '../pages/sports/Sports';
+
+// series
 import Series from '../pages/series/Series';
+
+// matches
 import Matches from '../pages/matches/Matches';
+import MatchDetail from '../pages/matches/MatchDetail';
+
+// others
+import CreditsHistory from '../pages/credits/CreditsHistory';
 import SubAdminWiseMasters from '../pages/sub_admin_wise_masters/SubAdminWiseMasters';
 import MasterWisePlayers from '../pages/master_wise_players/MasterWisePlayers';
 
@@ -88,12 +94,18 @@ class RoutesList extends React.Component {
           <PrivateRoute path="/players-reset-password/:id" component={PlayerResetPassword} />
           <PrivateRoute path="/players-archive" component={PlayersArchive} />
 
-          {/* others */}
-          <PrivateRoute path="/call-third-party-apis" component={ThirdPartyApis} />
-          <PrivateRoute path="/credits-history" component={CreditsHistory} />
+          {/* sports */}
           <PrivateRoute path="/sports-listing" component={Sports} />
+
+          {/* series */}
           <PrivateRoute path="/series-listing" component={Series} />
+
+          {/* matches */}
           <PrivateRoute path="/matches-listing" component={Matches} />
+          <PrivateRoute path="/match-detail" component={MatchDetail} />
+
+          {/* others */}
+          <PrivateRoute path="/credits-history" component={CreditsHistory} />
           <PrivateRoute path="/sub-admin-wise-masters/:parent_id" component={SubAdminWiseMasters} />
           <PrivateRoute path="/master-wise-players/:parent_id" component={MasterWisePlayers} />
           
