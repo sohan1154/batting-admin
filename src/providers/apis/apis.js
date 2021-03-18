@@ -163,6 +163,11 @@ export const addMasterCredit = (params) => {
     return axios.post(`/masters/add-credit`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
 
+export const withdrawMasterCredit = (params) => {
+    updateHeaders();
+    return axios.post(`/masters/withdraw-credit`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+
 // Players 
 export const createPlayerAccount = (params) => {
     updateHeaders();
@@ -217,6 +222,11 @@ export const changePlayerPassword = (params) => {
 export const addPlayerCredit = (params) => {
     updateHeaders();
     return axios.post(`/players/add-credit`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+
+export const withdrawPlayerCredit = (params) => {
+    updateHeaders();
+    return axios.post(`/players/withdraw-credit`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
 
 // Credits 

@@ -29,6 +29,7 @@ class Players extends React.Component {
             loading: false,
             currentUser: GlobalProvider.getUser(),
             open: false,
+            openWithdrawModal: false,
         }
     }
 
@@ -188,6 +189,7 @@ class Players extends React.Component {
         })
     }
 
+    // add credit functions
     openCreditForm = (id) => {
 
         let { formData } = this.state;
@@ -210,7 +212,7 @@ class Players extends React.Component {
         let _this = this;
 
         e.preventDefault();
-        const { formData } = this.state;
+        const { formData, currentUser } = this.state;
 
         this.setState({
             loading: true,
@@ -227,12 +229,19 @@ class Players extends React.Component {
 
                     if (response.status) {
 
+                        // update login user account available credits
+                        let userInfo = currentUser;
+                        userInfo.credit = response.currentUserRemainingCredits;
+                        console.log('userInfo:', userInfo)
+
+                        GlobalProvider.setUser(userInfo);
+
                         // update item status and set updated value into state
                         const { entries } = _this.state;
 
                         let entriesNew = entries.filter((item) => {
                             if (item.id == formData.user_id) {
-                                item.credit = response.availableCredit;
+                                item.credit = response.endUserUpdatedCredits;
                             }
 
                             return item;
@@ -275,6 +284,104 @@ class Players extends React.Component {
             });
         }
     }
+    // end add credit functions
+
+    // withdraw credit functions
+    openCreditWithdrawForm = (id) => {
+
+        let { formData } = this.state;
+        formData['user_id'] = id;
+
+        this.setState({
+            formData: formData,
+            errors: {},
+        });
+
+        this.setState({ openWithdrawModal: true });
+    }
+
+    onCloseWithdrawModal = () => {
+        this.setState({ openWithdrawModal: false });
+    }
+
+    withdrawCredit = (e) => {
+
+        let _this = this;
+
+        e.preventDefault();
+        const { formData, currentUser } = this.state;
+
+        this.setState({
+            loading: true,
+            formSubmitted: true,
+            errors: {},
+        });
+
+        let errors = this.validateForm();
+
+        if (!errors) {
+
+            ApisService.withdrawPlayerCredit(formData)
+                .then(response => {
+
+                    if (response.status) {
+
+                        // update login user account available credits
+                        let userInfo = currentUser;
+                        userInfo.credit = response.currentUserRemainingCredits;
+                        console.log('userInfo:', userInfo)
+
+                        GlobalProvider.setUser(userInfo);
+
+                        // update item status and set updated value into state
+                        const { entries } = _this.state;
+
+                        let entriesNew = entries.filter((item) => {
+                            if (item.id == formData.user_id) {
+                                item.credit = response.endUserUpdatedCredits;
+                            }
+
+                            return item;
+                        });
+
+                        _this.setState({
+                            entries: entriesNew,
+                            formSubmitted: false,
+                            loading: false,
+                            openWithdrawModal: false,
+                            errors: {},
+                        });
+
+                        GlobalProvider.successMessage(response.message);
+
+                    } else {
+                        this.setState({
+                            loading: false,
+                            formSubmitted: false,
+                            errors: {
+                                message: response.message
+                            }
+                        });
+                    }
+                }).catch(error => {
+                    this.setState({
+                        loading: false,
+                        formSubmitted: false,
+                        errors: {
+                            message: error
+                        }
+                    });
+                });
+
+        } else {
+            this.setState({
+                errors: errors,
+                formSubmitted: false,
+                loading: false,
+            });
+        }
+    }
+    // end withdraw credit functions
 
     handleChange = (event) => {
         const { target } = event;
@@ -314,7 +421,7 @@ class Players extends React.Component {
 
     render() {
 
-        const { entries, loading, open, errors } = this.state;
+        const { entries, loading, open, openWithdrawModal, errors } = this.state;
         let count = 1;
 
         return (
@@ -372,7 +479,7 @@ class Players extends React.Component {
                                                                     <td>{item.address}</td>
                                                                     <td className="right">{item.credit}</td>
                                                                     <td>
-                                                                    
+
                                                                         <span className="changeBettingStatus" onClick={() => this.changeBettingStatus(item.id, !item.is_betting)}>
                                                                             {item.is_betting ? (
                                                                                 <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-success" title="Locked"><i className="mdi mdi-check"></i></button>
@@ -391,7 +498,8 @@ class Players extends React.Component {
                                                                         </span>
                                                                     </td>
                                                                     <td>
-                                                                        <button className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-dark" title="Add Credit" onClick={() => this.openCreditForm(item.id)}><i className="mdi mdi-wallet"></i></button>
+                                                                        <button className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-success" title="Add Credit" onClick={() => this.openCreditForm(item.id)}><i className="mdi mdi-wallet"></i></button>
+                                                                        <button className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-danger" title="Withdraw Credit" onClick={() => this.openCreditWithdrawForm(item.id)}><i className="mdi mdi-wallet"></i></button>
                                                                         <a href={"/players-reset-password/" + item.id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-primary" title="Reset Password"><i className="mdi mdi-key"></i></a>
                                                                         <a href={"/players-view/" + item.id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-info" title="Detail"><i className="mdi mdi-eye"></i></a>
                                                                         <a href={"/players-edit/" + item.id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Edit"><i className="mdi mdi-square-edit-outline"></i></a>
@@ -414,6 +522,7 @@ class Players extends React.Component {
 
                 </main>
 
+                {/* add credit popup */}
                 <Modal open={open} onClose={this.onCloseModal} center>
 
                     <div className="modal-content m-t-80">
@@ -456,6 +565,57 @@ class Players extends React.Component {
                                     <div className="form-group">
                                         <button type="submit" data-dismiss="modal" className="btn text-uppercase btn-block  btn-primary"
                                             disabled={loading}>{loading ? 'Waiting...' : 'Add'}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </Modal>
+
+                {/* withdraw credit popup */}
+                <Modal open={openWithdrawModal} onClose={this.onCloseWithdrawModal} center>
+
+                    <div className="modal-content m-t-80">
+                        <div className="modal-body">
+                            <div className="">
+
+                                <h3 className="text-center">WITHDRAW CREDIT </h3>
+
+                                <form className="needs-validation" onSubmit={this.withdrawCredit}>
+                                    <div className="form-group">
+
+                                        <div className="input-group input-group-flush mb-3">
+                                            <input type="number" min="0" step="any" className="form-control form-control-prepended"
+                                                placeholder="Withdraw Credit" name="credit" onKeyUp={this.handleChange} />
+
+                                            <div className="input-group-prepend">
+                                                <div className="input-group-text">
+                                                    <span className=" mdi mdi-wallet "></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {errors.credit && <span className="error">{errors.credit}</span>}
+
+                                        <div className="input-group input-group-flush mb-3">
+                                            <textarea maxlength="255" className="form-control form-control-prepended" rows="4" cols="50"
+                                                placeholder="Remark" name="remark" onKeyUp={this.handleChange}></textarea>
+
+                                            <div className="input-group-prepend">
+                                                <div className="input-group-text">
+                                                    <span className=" mdi mdi-note "></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {errors.remark && <span className="error">{errors.remark}</span>}
+
+                                    </div>
+
+                                    {errors.message && <><span className="error-response">{errors.message}</span></>}
+
+                                    <div className="form-group">
+                                        <button type="submit" data-dismiss="modal" className="btn text-uppercase btn-block  btn-primary"
+                                            disabled={loading}>{loading ? 'Waiting...' : 'Withdraw'}</button>
                                     </div>
                                 </form>
                             </div>
