@@ -28,17 +28,17 @@ class PlayersInPlay extends React.Component {
 
     componentDidMount() {
 
-        this.getUsers('Player');
+        this.getInPlayMatch();
     }
 
-    getUsers = (role) => {
+    getInPlayMatch = () => {
 
         this.setState({
             loading: true,
             errors: {},
         });
 
-        ApisService.getListMatchesInplay(role)
+        ApisService.getListMatchesInplay()
             .then(response => {
 
                 if (response.status) {
