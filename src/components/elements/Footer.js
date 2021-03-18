@@ -6,8 +6,8 @@ class Footer extends React.Component {
 
     render() {
         return (
-            <div className="timcopyfootbar">
-                <img className="dekhadatalogo" src="images/dekhadetalogo.png" alt="Dekha Data" />
+            <div className="copyfootbar">
+                <img className="logo-img" src="images/logo.png" alt={SiteSettings.appName} />
                 <p>&copy; {SiteSettings.copyrightYear} {SiteSettings.appName}</p>
             </div>
         )
