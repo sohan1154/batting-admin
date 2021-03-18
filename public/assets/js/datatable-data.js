@@ -14,10 +14,10 @@ $(document).ready(function () {
                 // scrollY: '100vh',
                 // scrollCollapse: true,
                 // paging: true,
-                // pageLength: 50,
+                // pageLength: 20,
                 dom: 'Bfrtip',
                 buttons: [
-                    'copy', 'print', 'csv'
+                    'print', 'csv'
                 ]
             });
             $('#example-multi').DataTable({

@@ -242,6 +242,7 @@ class Players extends React.Component {
                             entries: entriesNew,
                             formSubmitted: false,
                             loading: false,
+                            open: false,
                             errors: {},
                         });
 
