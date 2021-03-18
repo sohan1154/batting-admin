@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as GlobalProvider from '../globals/globals';
 
-axios.defaults.baseURL = 'http://localhost:3001';
-// axios.defaults.baseURL = 'http://172.104.41.239:3001';
+//axios.defaults.baseURL = 'http://localhost:3001';
+ axios.defaults.baseURL = 'http://172.104.41.239:3001';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 function updateHeaders() {
@@ -319,4 +319,10 @@ export const getListSubAdminWiseMasters = (parent_id, status) => {
 export const getListMasterWisePlayers = (parent_id, status) => {
     updateHeaders();
     return axios.get(`/list_master_wise_players/${parent_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+
+// list matches in-play 
+export const getListMatchesInplay = () => {
+    updateHeaders();
+    return axios.get(`/matches/in-play`).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }

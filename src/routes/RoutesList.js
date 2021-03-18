@@ -34,6 +34,7 @@ import PlayerView from '../pages/players/PlayerView';
 import PlayerEdit from '../pages/players/PlayerEdit';
 import PlayerResetPassword from '../pages/players/PlayerResetPassword';
 import PlayersArchive from '../pages/players/PlayersArchive';
+import PlayersInPlay from '../pages/players/PlayerInPlay';
 
 // sports
 import Sports from '../pages/sports/Sports';
@@ -93,6 +94,8 @@ class RoutesList extends React.Component {
           <PrivateRoute path="/players-edit/:id" component={PlayerEdit} />
           <PrivateRoute path="/players-reset-password/:id" component={PlayerResetPassword} />
           <PrivateRoute path="/players-archive" component={PlayersArchive} />
+          <PrivateRoute path="/inplay" component={PlayersInPlay} />
+          {/* <PrivateRoute path="/players-match/:id" component={PlayerEdit} /> */}
 
           {/* sports */}
           <PrivateRoute path="/sports-listing" component={Sports} />

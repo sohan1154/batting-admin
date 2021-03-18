@@ -254,6 +254,16 @@ class SideMenuData extends React.Component {
                                         </span>
                                     </a>
                                 </li>
+                                <li className={activePath == '/inplay' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/inplay" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Inplay</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-coins "></i>
+                                        </span>
+                                    </a>
+                                </li>
                             </>
                         }
 
