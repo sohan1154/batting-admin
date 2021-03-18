@@ -16,9 +16,8 @@ $(document).ready(function () {
                 // paging: true,
                 // pageLength: 20,
                 dom: 'Bfrtip',
-                buttons: [
-                    'print', 'csv'
-                ]
+                buttons: ['print', 'csv'],
+                order: [],
             });
             $('#example-multi').DataTable({
                 //DataTable Options

@@ -99,8 +99,8 @@ class CreditsHistory extends React.Component {
                                                     <table id="listingTable" className="table " style={{ width: "100%" }}>
                                                         <thead>
                                                             <tr>
-                                                                <th>SN.</th>
                                                                 <th>Credit</th>
+                                                                <th>Withdraw</th>
                                                                 <th>Creditor</th>
                                                                 <th>Date</th>
                                                                 <th>Remark</th>
@@ -110,8 +110,8 @@ class CreditsHistory extends React.Component {
 
                                                             {entries.map((item, index) =>
                                                                 <tr key={item.id} id={'RecordID_' + item.id}>
-                                                                    <td>{count++}</td>
                                                                     <td className="right">{item.credit}</td>
+                                                                    <td className="right">{item.withdraw}</td>
                                                                     <td>{item.creditor_name}</td>
                                                                     <td>{item.created_at}</td>
                                                                     <td>{item.remark}</td>
