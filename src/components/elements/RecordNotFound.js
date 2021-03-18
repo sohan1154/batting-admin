@@ -14,9 +14,11 @@ class RecordNotFound extends React.Component {
                             <div className="card-body">
                                 <div className="table-responsive p-t-10">
                                     <table id="listingTable" className="table" style={{ width: "100%" }}>
-                                        <tr>
-                                            <td>Record not found</td>
-                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <td>Record not found</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>

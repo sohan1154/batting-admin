@@ -139,7 +139,7 @@ class Series extends React.Component {
 
                                             <div className="card-body">
                                                 <div className="table-responsive p-t-10">
-                                                    <table id="listingTable" className="table " style={{ width: "100%" }}>
+                                                    <table id="listingTable" className="table ">
                                                         <thead>
                                                             <tr>
                                                                 <th>Series ID</th>

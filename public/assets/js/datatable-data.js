@@ -11,9 +11,14 @@ $(document).ready(function () {
                 //DataTable Options
             });
             $('#listingTable').DataTable({
-                scrollY: '50vh',
-                scrollCollapse: true,
-                paging: false
+                // scrollY: '100vh',
+                // scrollCollapse: true,
+                // paging: true,
+                // pageLength: 50,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'print', 'csv'
+                ]
             });
             $('#example-multi').DataTable({
                 //DataTable Options
