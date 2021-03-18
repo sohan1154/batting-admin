@@ -14,15 +14,11 @@ class PlayersInPlay extends React.Component {
         super(props);
      
         this.state = {
-            entries:  [
-              
-            ]
-        ,
+            entries:  [],
             errors: {},
             loading: false,
             currentUser: GlobalProvider.getUser(),
             open: false,
-            
         }
     }
 
