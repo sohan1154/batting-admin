@@ -336,3 +336,8 @@ export const getListMatchesInplay = () => {
     updateHeaders();
     return axios.get(`/matches/in-play`).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
+// list matche Sessions 
+export const getListMatcheSessions = (event_id) => {
+    updateHeaders();
+    return axios.get(`/sessions/listing/${event_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}

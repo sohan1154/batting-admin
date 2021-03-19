@@ -45,6 +45,7 @@ import Series from '../pages/series/Series';
 // matches
 import Matches from '../pages/matches/Matches';
 import MatchDetail from '../pages/matches/MatchDetail';
+import MatchSession from '../pages/matches/MatchSession';
 
 // others
 import CreditsHistory from '../pages/credits/CreditsHistory';
@@ -106,6 +107,7 @@ class RoutesList extends React.Component {
           {/* matches */}
           <PrivateRoute path="/matches-listing" component={Matches} />
           <PrivateRoute path="/match-detail" component={MatchDetail} />
+          <PrivateRoute path="/match-sessions/:event_id" component={MatchSession} />
 
           {/* others */}
           <PrivateRoute path="/credits-history" component={CreditsHistory} />
