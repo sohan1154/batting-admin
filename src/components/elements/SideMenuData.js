@@ -139,6 +139,16 @@ class SideMenuData extends React.Component {
                                         </span>
                                     </a>
                                 </li>
+                                <li className={activePath == '/edit-globlesetting' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/edit-globlesetting" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Globle Setting</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-view-list"></i>
+                                        </span>
+                                    </a>
+                                </li>
                             </>
                         }
 

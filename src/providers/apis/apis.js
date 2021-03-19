@@ -343,14 +343,18 @@ export const getListMatcheSessions = (event_id) => {
 }
 // add/remove session 
 export const addremoveMatchStatus = (session_id, status) => {
-    console.log(session_id);
-    console.log(status);
+
     updateHeaders();
     return axios.put(`/sessions/add-remove/${session_id}/${status}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
 // abandoned the session
 export const abandonedMatchStatus = (session_id) => {
-    console.log(session_id);
+    
     updateHeaders();
     return axios.put(`/sessions/abandoned/${session_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+// list matche Sessions 
+export const getGlobleSettingData = (params) => {
+    updateHeaders();
+    return axios.get(`/settings/get-global-settings`,{params: params}).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }

@@ -10,6 +10,7 @@ import Home from '../pages/home/Home';
 // settings 
 import EditProfile from '../pages/settings/EditProfile';
 import ChangePassword from '../pages/settings/ChangePassword';
+import GlobleSetting from '../pages/settings/GlobleSetting';
 
 // sub-admins 
 import SubAdmins from '../pages/subadmins/SubAdmins';
@@ -71,6 +72,7 @@ class RoutesList extends React.Component {
           {/* settings */}
           <PrivateRoute path="/edit-profile" component={EditProfile} />
           <PrivateRoute path="/change-password" component={ChangePassword} />
+          <PrivateRoute path="/edit-globlesetting" component={GlobleSetting} />
 
           {/* sub-admins */}
           <PrivateRoute path="/sub-admins" component={SubAdmins} />
