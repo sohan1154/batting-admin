@@ -59,13 +59,13 @@ class MatcheSession extends React.Component {
             });
     }
 
-    changeStatus = (id, status) => {
+    changesessionStatus = (session_id, status) => {
 
         let _this = this;
 
         GlobalProvider.confirmBox("Are you Sure? You want to change status of this record.", (isTrue) => {
             if (isTrue) {
-                ApisService.changeMatchStatus(id, status)
+                ApisService.addremoveMatchStatus(session_id, status)
                     .then(response => {
 
                         if (response.status) {
@@ -74,8 +74,49 @@ class MatcheSession extends React.Component {
                             const { entries } = _this.state;
 
                             let entriesNew = entries.filter((item) => {
-                                if (item.id == id) {
-                                    item.status = status;
+                                if (item.session_id == session_id) {
+                                    
+                                    item.is_allowed = status;
+                                }
+
+                                return item;
+                            });
+
+                            _this.setState({
+                                entries: entriesNew,
+                            });
+
+                            GlobalProvider.successMessage(response.message);
+
+                        } else {
+                            GlobalProvider.errorMessage(response.message);
+                        }
+
+                    }).catch(error => {
+                        GlobalProvider.errorMessage(error.message);
+                    });
+            }
+        });
+    }
+
+    abandonedsession = (session_id) => {
+
+        let _this = this;
+
+        GlobalProvider.confirmBox("Are you Sure? You want to change status of this record.", (isTrue) => {
+            if (isTrue) {
+                ApisService.abandonedMatchStatus(session_id)
+                    .then(response => {
+
+                        if (response.status) {
+
+                            // update item status and set updated value into state
+                            const { entries } = _this.state;
+
+                            let entriesNew = entries.filter((item) => {
+                                if (item.session_id == session_id) {
+                                    
+                                    item.is_abandoned = !item.is_abandoned;
                                 }
 
                                 return item;
@@ -148,15 +189,18 @@ class MatcheSession extends React.Component {
                                                         <tbody>
 
                                                             {entries.map((item, index) =>
+                                                                
+                                                                
+                                                                    (item.is_abandoned==0)?
                                                                 <tr key={item.session_id} id={'RecordID_' + item.session_id}>
                                                                     <td>{item.SelectionId}</td>
                                                                     <td>{item.RunnerName}</td>
                                                                     <td>{item.GameStatus}</td>
                                                                     <td className="text-align-center">
-                                                                    <span className="changeStatus">
+                                                                    <span className="changeStatus" onClick={() => this.changesessionStatus(item.session_id, !item.is_allowed)}>
                                                                        
                                                                      {
-                                                                          (item.is_allowed === 0) ? (
+                                                                          (item.is_allowed===0)  ? (
                                                                                 <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-success" title="Allowed"><i className="mdi mdi-check"></i></button>
                                                                             )  : (
                                                                                     <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Allowed Request Cancel"><i className="mdi mdi-close"></i></button>
@@ -166,7 +210,7 @@ class MatcheSession extends React.Component {
                                                                      </td>
                                                                     
                                                                      <td className="text-align-center">
-                                                                    <span className="changeStatus">
+                                                                    <span className="changeStatus"  onClick={() => this.abandonedsession(item.session_id)}>
                                                                        
                                                                      {
                                                                           (item.is_abandoned === 0) ? (
@@ -177,7 +221,9 @@ class MatcheSession extends React.Component {
                                                                      }
                                                                      </span>
                                                                      </td>
-                                                                </tr>
+                                                                </tr>:null
+                                                                
+                                                                
                                                             )}
 
                                                         </tbody>

@@ -341,3 +341,16 @@ export const getListMatcheSessions = (event_id) => {
     updateHeaders();
     return axios.get(`/sessions/listing/${event_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
+// add/remove session 
+export const addremoveMatchStatus = (session_id, status) => {
+    console.log(session_id);
+    console.log(status);
+    updateHeaders();
+    return axios.put(`/sessions/add-remove/${session_id}/${status}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+// abandoned the session
+export const abandonedMatchStatus = (session_id) => {
+    console.log(session_id);
+    updateHeaders();
+    return axios.put(`/sessions/abandoned/${session_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
