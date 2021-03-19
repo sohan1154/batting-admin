@@ -73,10 +73,6 @@ class GlobleSetting extends React.Component {
             errors.app_name = "App Name can't be blank";
         }
 
-        if (CustomValidators.numberOnly(formData.is_bat_allowed)) {
-            errors.is_bat_allowed = "Please Enter number only.";
-        }
-
         if (!CustomValidators.numberOnly(formData.user_max_profit_on_session)) {
             errors.user_max_profit_on_session = "Please Enter number only.";
         }
@@ -97,11 +93,21 @@ class GlobleSetting extends React.Component {
             errors.user_max_profit_on_odds = "You can Enter maximum 100000.";
         }
 
-        if (CustomValidators.numberOnly(formData.margin_per)) {
+        if (!CustomValidators.numberOnly(formData.margin_per)) {
             errors.margin_per = "Please Enter number only.";
         }
-        if (!CustomValidators.numberOnly(formData.margin_fix)) {
-            errors.margin_fix = "Please Enter number only.";
+        else if (formData.margin_per < 0) {
+            errors.margin_per = "Please Enter minimum 0.";
+        }
+        else if (formData.margin_per > 10000) {
+            errors.margin_per = "You can Enter maximum 100000.";
+        }
+       
+        if (formData.margin_fix < 0) {
+            errors.margin_per = "Please Enter minimum 0.";
+        }
+        else if (formData.margin_fix > 10000) {
+            errors.margin_per = "You can Enter maximum 100000.";
         }
 
         console.log("Err:::::: ", errors)
@@ -130,7 +136,7 @@ class GlobleSetting extends React.Component {
 
         if (!errors) {
 
-            ApisService.updateAccount(formData)
+            ApisService.updateGlobleSetting(formData)
                 .then(response => {
 
                     if (response.status) {
@@ -213,31 +219,33 @@ class GlobleSetting extends React.Component {
                                                             {errors.app_name && <span className="error">{errors.app_name}</span>}
                                                         </div>
                                                         <div className="form-group col-md-6">
-                                                            <label for="inputEmail4">Bat allowed</label>
-                                                            <input type="text" className="form-control" name="is_bat_allowed" defaultValue={formData.is_bat_allowed} onKeyUp={this.handleChange} />
-                                                            {errors.is_bat_allowed && <span className="error">{errors.is_bat_allowed}</span>}
+                                                           <label for="inputEmail4">Bat Allowed</label>
+                                                            <select className="form-control" name="is_bat_allowed" value={formData.is_bat_allowed} onChange={this.handleChange}>
+                                                                <option value={1}>Active</option>
+                                                                <option value={0}>In-Active</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div className="form-row">
                                                         <div className="form-group col-md-6">
-                                                            <label for="asd">Margin Per</label>
-                                                            <input type="text" className="form-control" name="margin_per" defaultValue={formData.margin_per} onKeyUp={this.handleChange} />
+                                                            <label for="asd">Margin Per*</label>
+                                                            <input type="number" min="0" className="form-control" name="margin_per" defaultValue={formData.margin_per} onKeyUp={this.handleChange} />
                                                             {errors.margin_per && <span className="error">{errors.margin_per}</span>}
                                                         </div>
                                                         <div className="form-group col-md-6">
                                                             <label for="inputPassword4">Margin Fix</label>
-                                                            <input type="text" className="form-control" name="margin_fix" defaultValue={formData.margin_fix} onKeyUp={this.handleChange} />
+                                                            <input type="number" min="0"  className="form-control" name="margin_fix" defaultValue={formData.margin_fix} onKeyUp={this.handleChange} />
                                                             {errors.margin_fix && <span className="error">{errors.margin_fix}</span>}
                                                         </div>
                                                     </div>
                                                     <div className="form-group">
-                                                        <label for="inputAddress">Max Profit Session</label>
-                                                        <input type="text" className="form-control" name="user_max_profit_on_session" defaultValue={formData.user_max_profit_on_session} onKeyUp={this.handleChange} />
+                                                        <label for="inputAddress">Max Profit Session*</label>
+                                                        <input type="number" min="0"  className="form-control" name="user_max_profit_on_session" defaultValue={formData.user_max_profit_on_session} onKeyUp={this.handleChange} />
                                                         {errors.user_max_profit_on_session && <span className="error">{errors.user_max_profit_on_session}</span>}
                                                     </div>
                                                     <div className="form-group">
-                                                        <label for="inputAddress">Max Profit odds</label>
-                                                        <input type="text" className="form-control" name="user_max_profit_on_odds" defaultValue={formData.user_max_profit_on_odds} onKeyUp={this.handleChange} />
+                                                        <label for="inputAddress">Max Profit odds*</label>
+                                                        <input type="number" min="0"  className="form-control" name="user_max_profit_on_odds" defaultValue={formData.user_max_profit_on_odds} onKeyUp={this.handleChange} />
                                                         {errors.user_max_profit_on_odds && <span className="error">{errors.user_max_profit_on_odds}</span>}
                                                     </div>
 

@@ -358,3 +358,9 @@ export const getGlobleSettingData = (params) => {
     updateHeaders();
     return axios.get(`/settings/get-global-settings`,{params: params}).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
+//
+
+export const updateGlobleSetting = (params) => {
+    updateHeaders();
+    return axios.post(`/settings/update-global-settings`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}

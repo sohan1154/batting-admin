@@ -197,30 +197,21 @@ class MatcheSession extends React.Component {
                                                                     <td>{item.RunnerName}</td>
                                                                     <td>{item.GameStatus}</td>
                                                                     <td className="text-align-center">
-                                                                    <span className="changeStatus" onClick={() => this.changesessionStatus(item.session_id, !item.is_allowed)}>
+                                                                    <span className="changeStatus">
                                                                        
                                                                      {
                                                                           (item.is_allowed===0)  ? (
-                                                                                <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-success" title="Allowed"><i className="mdi mdi-check"></i></button>
+                                                                                <button type="button" onClick={() => this.changesessionStatus(item.session_id, 1)} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-success" title="Allowed"><i className="mdi mdi-check"></i></button>
                                                                             )  : (
-                                                                                    <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Allowed Request Cancel"><i className="mdi mdi-close"></i></button>
+                                                                                    <button type="button" onClick={() => this.changesessionStatus(item.session_id, 0)} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Allowed Request Cancel"><i className="mdi mdi-close"></i></button>
                                                                                 )
                                                                      }
                                                                      </span>
                                                                      </td>
                                                                     
                                                                      <td className="text-align-center">
-                                                                    <span className="changeStatus"  onClick={() => this.abandonedsession(item.session_id)}>
-                                                                       
-                                                                     {
-                                                                          (item.is_abandoned === 0) ? (
-                                                                                <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-success" title="Abandoned"><i className="mdi mdi-check"></i></button>
-                                                                            )  : (
-                                                                                    <button type="button" className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-warning" title="Abandoned Cancel"><i className="mdi mdi-close"></i></button>
-                                                                                )
-                                                                     }
-                                                                     </span>
-                                                                     </td>
+                                                                     <button type="button" onClick={() => this.abandonedsession(item.session_id)} className="btn btn-sm m-b-15 ml-2 mr-2  btn-danger" title="Abandoned">Abandoned</button>
+                                                                      </td>
                                                                 </tr>:null
                                                                 
                                                                 

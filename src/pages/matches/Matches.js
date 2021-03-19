@@ -171,7 +171,7 @@ class Matches extends React.Component {
                                                                     </td>
                                                                     <td className="text-align-center">
                                                                         <a href={"/match-detail/" + item.id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-info" title="Match Detail"><i className="mdi mdi-eye"></i></a>
-                                                                        <a href={"/match-sessions/" + item.event_id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-info" title="Match sessions"><i className="mdi mdi-view-list"></i></a>
+                                                                        <a href={"/match-sessions/" + item.event_id} className="btn btn-sm m-b-15 ml-2 mr-2 btn-rounded-circle btn-dark" title="Match sessions"><i className="mdi mdi-view-list"></i></a>
                                                                     </td>
                                                                 </tr>
                                                             )}
