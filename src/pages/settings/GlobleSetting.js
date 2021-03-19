@@ -14,7 +14,7 @@ class GlobleSetting extends React.Component {
 
         this.state = {
             formData: {
-               
+
             }, // Contains form data
             errors: {}, // Contains field errors
             formSubmitted: false, // Indicates submit status of form
@@ -72,27 +72,39 @@ class GlobleSetting extends React.Component {
         if (CustomValidators.isEmpty(formData.app_name)) {
             errors.app_name = "App Name can't be blank";
         }
-        
-       if (CustomValidators.numberOnly(formData.is_bat_allowed)) {
+
+        if (CustomValidators.numberOnly(formData.is_bat_allowed)) {
             errors.is_bat_allowed = "Please Enter number only.";
         }
-        
-       if (CustomValidators.numberOnly(formData.user_max_profit_on_session)) {
+
+        if (!CustomValidators.numberOnly(formData.user_max_profit_on_session)) {
             errors.user_max_profit_on_session = "Please Enter number only.";
         }
-        
-       if (CustomValidators.numberOnly(formData.user_max_profit_on_odds) ) {
+        else if (formData.user_max_profit_on_session < 0) {
+            errors.user_max_profit_on_session = "Please Enter minimum 0.";
+        }
+        else if (formData.user_max_profit_on_session > 10000) {
+            errors.user_max_profit_on_session = "You can Enter maximum 100000.";
+        }
+
+        if (!CustomValidators.numberOnly(formData.user_max_profit_on_odds)) {
             errors.user_max_profit_on_odds = "Please Enter number only.";
         }
-        
-       if (CustomValidators.numberOnly(formData.margin_per)) {
+        else if (formData.user_max_profit_on_odds < 0) {
+            errors.user_max_profit_on_odds = "Please Enter minimum 0.";
+        }
+        else if (formData.user_max_profit_on_odds > 10000) {
+            errors.user_max_profit_on_odds = "You can Enter maximum 100000.";
+        }
+
+        if (CustomValidators.numberOnly(formData.margin_per)) {
             errors.margin_per = "Please Enter number only.";
         }
         if (!CustomValidators.numberOnly(formData.margin_fix)) {
             errors.margin_fix = "Please Enter number only.";
         }
-      
-console.log("Err:::::: ",errors)
+
+        console.log("Err:::::: ", errors)
         if (CustomValidators.isEmpty(errors)) {
             return null;
         } else {
@@ -132,9 +144,9 @@ console.log("Err:::::: ",errors)
                         // userInfo.email = formData.email;
                         // userInfo.mobile = formData.mobile;
                         // userInfo.address = formData.address;
-                       // console.log('userInfo:', userInfo)
+                        // console.log('userInfo:', userInfo)
 
-                       // GlobalProvider.setUser(userInfo);
+                        // GlobalProvider.setUser(userInfo);
                         GlobalProvider.successMessage(response.message);
                     } else {
                         this.setState({
@@ -204,30 +216,30 @@ console.log("Err:::::: ",errors)
                                                             <label for="inputEmail4">Bat allowed</label>
                                                             <input type="text" className="form-control" name="is_bat_allowed" defaultValue={formData.is_bat_allowed} onKeyUp={this.handleChange} />
                                                             {errors.is_bat_allowed && <span className="error">{errors.is_bat_allowed}</span>}
-                                                           </div>
+                                                        </div>
                                                     </div>
                                                     <div className="form-row">
                                                         <div className="form-group col-md-6">
                                                             <label for="asd">Margin Per</label>
-                                                            <input type="text" className="form-control" name="margin_per" defaultValue={formData.margin_per}  onKeyUp={this.handleChange} />
+                                                            <input type="text" className="form-control" name="margin_per" defaultValue={formData.margin_per} onKeyUp={this.handleChange} />
                                                             {errors.margin_per && <span className="error">{errors.margin_per}</span>}
                                                         </div>
                                                         <div className="form-group col-md-6">
                                                             <label for="inputPassword4">Margin Fix</label>
                                                             <input type="text" className="form-control" name="margin_fix" defaultValue={formData.margin_fix} onKeyUp={this.handleChange} />
                                                             {errors.margin_fix && <span className="error">{errors.margin_fix}</span>}
-                                                           </div>
+                                                        </div>
                                                     </div>
                                                     <div className="form-group">
                                                         <label for="inputAddress">Max Profit Session</label>
                                                         <input type="text" className="form-control" name="user_max_profit_on_session" defaultValue={formData.user_max_profit_on_session} onKeyUp={this.handleChange} />
                                                         {errors.user_max_profit_on_session && <span className="error">{errors.user_max_profit_on_session}</span>}
-                                                       </div>
-                                                 <div className="form-group">
+                                                    </div>
+                                                    <div className="form-group">
                                                         <label for="inputAddress">Max Profit odds</label>
                                                         <input type="text" className="form-control" name="user_max_profit_on_odds" defaultValue={formData.user_max_profit_on_odds} onKeyUp={this.handleChange} />
                                                         {errors.user_max_profit_on_odds && <span className="error">{errors.user_max_profit_on_odds}</span>}
-                                                       </div>
+                                                    </div>
 
                                                     <button type="submit" className="btn btn-primary btn-cta" disabled={loading}>{loading ? 'Waiting...' : 'Submit'}</button>
                                                     &nbsp;&nbsp;
