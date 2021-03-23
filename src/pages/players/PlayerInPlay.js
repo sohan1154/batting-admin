@@ -6,7 +6,7 @@ import * as ApisService from "../../providers/apis/apis";
 import { Roller } from "react-awesome-spinners";
 import SideMenuData from '../../components/elements/SideMenuData';
 import 'react-responsive-modal/styles.css';
-
+import Marquee from "react-fast-marquee";
 
 class PlayersInPlay extends React.Component {
 
@@ -15,6 +15,7 @@ class PlayersInPlay extends React.Component {
      
         this.state = {
             entries:  [],
+            dataMarquee:[],
             errors: {},
             loading: false,
             currentUser: GlobalProvider.getUser(),
@@ -23,7 +24,7 @@ class PlayersInPlay extends React.Component {
     }
 
     componentDidMount() {
-
+        this.getadvertisements();
         this.getInPlayMatch();
     }
 
@@ -59,11 +60,43 @@ class PlayersInPlay extends React.Component {
                 GlobalProvider.errorMessage(error);
             });
     }
+    getadvertisements  = () => {
+
+        this.setState({
+            loading: true,
+            errors: {},
+        });
+
+        ApisService.getadvertisements()
+            .then(response => {
+
+                if (response.status) {
+                    console.log(response.data);
+                    this.setState({
+                        loading: false,
+                        dataMarquee: response.data,
+                    });
+                } else {
+                    this.setState({
+                        loading: false,
+                    });
+                    GlobalProvider.errorMessage(response.message);
+                }
+
+                GlobalProvider.loadDataTable();
+
+            }).catch(error => {
+                this.setState({
+                    loading: false,
+                });
+                GlobalProvider.errorMessage(error);
+            });
+    }
 
    
     render() {
 
-        const { entries, loading, open, errors } = this.state;
+        const { entries, loading, dataMarquee,open, errors } = this.state;
         let count = 1;
 
         return (
@@ -80,10 +113,24 @@ class PlayersInPlay extends React.Component {
                                 <div className="row">
                                     <div className="col-12 text-white p-t-40 p-b-90">
                                         <h4 className="">In-Play</h4>
+                                        <div className="marquee">
+                                    <div className="track">
+                                        <div className="content">
+                                        {
+                                                    dataMarquee.length > 0 &&
+                                                        dataMarquee.map((item, index) =>
+                                                    <span style={{color:'#000000'}}>{item.title} !! </span>
+                                                    )                                        
+                                                }
                                     </div>
                                 </div>
                             </div>
+                                    </div>
+                                  
+                                </div>
+                            </div>
                         </div>
+                      
 
                         {loading && <div className="center"><Roller /></div>}
 
@@ -93,9 +140,11 @@ class PlayersInPlay extends React.Component {
 
                             <div className="container  pull-up">
                                 <div className="row">
-                                    <div className="col-12">
-                                        <div className="card">
+                               
+                                                                  <div className="col-12">
 
+                                        <div className="card">
+                   
                                             <div className="card-body">
                                                 <div className="table-responsive p-t-10">
                                                     <table id="listingTable" className="table " style={{ width: "100%" }}>
@@ -111,7 +160,7 @@ class PlayersInPlay extends React.Component {
 
                                                             {entries.map((item, index) =>
                                                                 <tr key={item.event_id} id={'RecordID_' + item.event_id}>
-                                                                    <td><a href={"/players-match/" + item.event_id}> {item.event_name}</a></td>
+                                                                    <td><a href={"/match-refresh/" + item.event_id}> {item.event_name}</a></td>
                                                                     {
                                                                             item.prices.map((val,index)=>{
                                                                              if(item.prices.length<6){

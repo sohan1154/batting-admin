@@ -364,3 +364,17 @@ export const updateGlobleSetting = (params) => {
     updateHeaders();
     return axios.post(`/settings/update-global-settings`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
+
+// Refresh Match odd
+export const GetMatchRefresh = (event_id) => {
+    
+    updateHeaders();
+    return axios.get(`/matches/user-match-odds/${event_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+
+
+//get advertisements
+export const getadvertisements = () => {
+    updateHeaders();
+    return axios.get(`/players/get-advertisements`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}

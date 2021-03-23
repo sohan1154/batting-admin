@@ -25,7 +25,53 @@
 }
 .td_bg_blue{
 background:#a6d8ff ;
+width: 20%;
 }
 .td_bg_pink{
+  width: 20%;
   background:#fac9d1 ;
+}
+
+.div_bg_blue{
+  background:#a6d8ff ;
+ 
+  }
+  .div_bg_pink{
+   
+    background:#fac9d1 ;
+  }
+
+.td_bg_bluelight{
+  width: 20%;
+  background:#e3f3fe
+}
+.td_bg_pinklight{
+  width: 20%;
+  background:#fdeef2
+}
+#listingTable3 td{
+  padding: 0 !important;
+}
+
+
+.marquee {
+  position: relative;
+  width:100vw;
+  background: #fff;
+  max-width: 100%;
+  height: 30px;
+  overflow-x: hidden;
+}
+
+.track {
+  position: absolute;
+  right: 0;
+  white-space: nowrap;
+  will-change: transform;
+  animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-110%); }
 }

@@ -75,3 +75,4 @@ export const errorMessage = (message) => {
 
     alertify.error(message);
 }
+
