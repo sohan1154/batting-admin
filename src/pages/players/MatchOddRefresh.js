@@ -34,39 +34,99 @@ class MatchRefresh extends React.Component {
             staketype:"",
             stakesval:"",
             stakesvaltype:"",
+            selectedStakeVal:"",
             errors: {},
             loading: false,
             currentUser: GlobalProvider.getUser(),
             open: false,
+            stakes:{},
+            disabled: true,
+            marketbats:[],
+            fancybats:[],
         }
     }
 
     componentDidMount() {
+       
         let event_id = this.props.match.params.id;
         var data=JSON.parse(sessionStorage.getItem("user"));
         this.setState({values:data.stakes});
         this.getMatchRefresh(event_id);
+        this.getMatchBatlist(event_id)
     }
     onHideShow=()=> {
         this.setState({ showResults: true });
     }
-    onUpdate=()=>{
-        console.log(this.state.values)
-        this.setState({ showResults: false });
-        
+    onUpdate=()=>{ 
+       this.updateStake({stakes:this.state.values}); 
     }
-    onShow=(type,value,valuetype)=> {
+
+    updateStake(param){
+        
+        const {  currentUser } = this.state;
+        
+        this.setState({
+            loading: true,
+            errors: {},
+        });
+
+        ApisService.updateStakeData(param)
+            .then(response => {
+                
+                if (response.status) {
+                    console.log(param);
+                    let userInfo = currentUser;
+                    userInfo.stakes = param.stakes;
+                    console.log('userInfo:', userInfo)
+                   // this.setState({values:userInfo.stakes});
+                    GlobalProvider.setUser(userInfo)
+                    GlobalProvider.successMessage(response.message);
+                    this.setState({ showResults: false });
+        
+                } else {
+                   
+                    GlobalProvider.errorMessage(response.message);
+                }
+
+            }).catch(error => {
+                
+                GlobalProvider.errorMessage(error);
+            });
+    }
+
+    onShow=(type,value,valuetype,bat_type,event_id,marketId,selectionId,market_runner_id,isback)=> {
         this.setState({ showStakes: true });
         this.setState({ staketype: type });
         this.setState({ stakesval: value });
         this.setState({ stakesvaltype: valuetype });
-        console.log(type)
-        console.log(value)
-        console.log(valuetype)
+        this.setState({selectedStakeVal:''})
+
+        this.setState({data:{
+            "bat_type": bat_type,
+            "event_id": event_id,
+            "marketId": marketId,
+            "selectionId": selectionId,
+            "market_runner_id": market_runner_id,
+            "odd_price": value,
+            "is_back": isback
+        }
+        });
         
+
     }
     onHideUpade=()=> {
-        this.setState({ showStakes: false });
+        console.log(this.state.fulldata);
+        this.newBatsAddon(this.state.fulldata);
+        
+        //this.setState({ showStakes: false });
+    }
+    selectedStake=(val)=>{
+        this.setState({ selectedStakeVal: val });
+        
+        this.setState({ fulldata:{stack:val, ...this.state.data} });
+
+        this.setState({ profit_loss: (((this.state.stakesval-1)*val)-val) });
+        
     }
     
     getMatchRefresh = (event_id) => {
@@ -90,8 +150,7 @@ class MatchRefresh extends React.Component {
                         sessions:response.sessions
                     });
                 } else {
-                    console.log(response.message);
-                console.log("error2");
+                   
                     this.setState({
                         loading: false,
                     });
@@ -109,18 +168,73 @@ class MatchRefresh extends React.Component {
                 GlobalProvider.errorMessage(error);
             });
     }
+
+    getMatchBatlist = (event_id) => {
+        
+        this.setState({
+            loading: true,
+            errors: {},
+        });
+
+        ApisService.GetMatchbatoddSession(event_id)
+            .then(response => {
+                
+                if (response.status) {
+                    this.setState({
+                        loading: false,
+                        marketbats:response.odds,
+                        fancybats:response.sessions
+                    });
+                } else {
+                   
+                    this.setState({
+                        loading: false,
+                    });
+                    GlobalProvider.errorMessage(response.message);
+                }
+
+            }).catch(error => {
+                
+                this.setState({
+                    loading: false,
+                });
+                GlobalProvider.errorMessage(error);
+            });
+    }
+
+
+    newBatsAddon = (params) => {
+        console.log(params);
+        this.setState({
+            loading: true,
+            errors: {},
+        });
+        ApisService.NewBatsAddon(params)
+            .then(response => {            
+                if (response.status) {    
+                    this.getMatchBatlist(params.event_id);    
+                    GlobalProvider.successMessage(response.message);
+                    this.setState({ showStakes: false });
+                } else {
+                    GlobalProvider.errorMessage(response.message);
+                }
+
+            }).catch(error => {
+                
+                GlobalProvider.errorMessage(error);
+            });
+    }
+
     handleSubmit(event) {
-       // alert('A name was submitted: ' + this.state.values.join(', '));
         event.preventDefault();
       }
       handleChange(i, event) {
         let values = [...this.state.values];
         values[i] = event.target.value;
-        console.log(values);
         this.setState({ values });
-     }
+     } 
     render() {
-        const { score,eventTypeId,matchType,sessions, markets,loading, values,open, errors,stakesval,value,staketype,stakesvaltype } = this.state;
+        const { marketbats,fancybats,score,eventTypeId,matchType,sessions, markets,loading, values,open, errors,stakesval,value,staketype,stakesvaltype,selectedStakeVal } = this.state;
         let count = 1;
       
         return (
@@ -133,10 +247,7 @@ class MatchRefresh extends React.Component {
                     <Header />
 
                     <section className="admin-content">
-                    
-
-
-                           
+                         
                         <div className="bg-dark">
                             <div className="container  m-b-30">
                                 <div className="row">
@@ -252,11 +363,11 @@ class MatchRefresh extends React.Component {
                                                                         <td className="td_bg_bluelight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td> 
                                                                        :(index ==2)?
 
-                                                                        <td className="td_bg_blue" onClick={() =>this.onShow(item.runnerName,val.price,"Back")} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_blue" onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[0].event_id,markets[0].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        
                                                                        :(index ==3)?
 
-                                                                        <td className="td_bg_pink"  onClick={() => this.onShow(item.runnerName,val.price,"Lay")} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_pink"  onClick={() => this.onShow(item.runnerName,val.price,"Lay","odd",markets[0].event_id,markets[0].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        
                                                                        :<td className="td_bg_pinklight" style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                       
@@ -292,9 +403,9 @@ class MatchRefresh extends React.Component {
                                                                       (index <2)?
                                                                         <td className="td_bg_bluelight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td> 
                                                                        :(index ==2)?
-                                                                        <td className="td_bg_blue" onClick={() =>this.onShow(item.runnerName,val.price,"Back")} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_blue" onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[1].event_id,markets[1].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :(index ==3)?
-                                                                        <td className="td_bg_pink" onClick={() =>this.onShow(item.runnerName,val.price,"Lay")} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_pink" onClick={() =>this.onShow(item.runnerName,val.price,"Lay","odd",markets[1].event_id,markets[1].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :<td className="td_bg_pinklight" style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                       
                                                                      
@@ -328,9 +439,9 @@ class MatchRefresh extends React.Component {
                                                                       (index <2)?
                                                                         <td className="td_bg_bluelight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td> 
                                                                        :(index ==2)?
-                                                                        <td className="td_bg_blue"  onClick={() =>this.onShow(item.runnerName,val.price,"Back")} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_blue"  onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[2].event_id,markets[2].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :(index ==3)?
-                                                                        <td className="td_bg_pink"  onClick={() =>this.onShow(item.runnerName,val.price,"Lay")} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_pink"  onClick={() =>this.onShow(item.runnerName,val.price,"Lay","odd",markets[2].event_id,markets[2].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :<td className="td_bg_pinklight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                       
                                                                      
@@ -375,7 +486,7 @@ class MatchRefresh extends React.Component {
                                                                 <tr key={item.session_id} id={'RecordID_' + item.session_id} style={{height:'30px'}}>
                                                                 
                                                                     <td style={{width:'40%'}}> {item.RunnerName}</td>           
-                                                                    <td className="td_bg_pink"   onClick={() =>this.onShow(item.RunnerName +" No",item.LayPrice1,"Lay")}style={{textAlign:"center"}}>{item.LayPrice1}<p>{item.LaySize1}</p></td>
+                                                                    <td className="td_bg_pink"   onClick={() =>this.onShow(item.RunnerName +" No",item.LayPrice1,"Lay")} style={{textAlign:"center"}}>{item.LayPrice1}<p>{item.LaySize1}</p></td>
                                                                     <td className="td_bg_blue" onClick={() =>this.onShow(item.RunnerName +" Yes",item.BackPrice1,"Back")} style={{textAlign:"center"}}>{item.BackPrice1}<p>{item.BackSize1}</p></td>
                                                                 </tr>
                                                             )}
@@ -726,7 +837,7 @@ class MatchRefresh extends React.Component {
 
                                                             <div key={index} class="form-group">
                                                                 <div class="col-xs-1">
-                                                                <input class="form-control" value={item||''}  onChange={this.handleChange.bind(this, index)}  type="text" />
+                                                                <input class="form-control" value={item||''}   onChange={this.handleChange.bind(this, index)}  type="text" />
                                                                 </div>
                                                             </div>
                                                     )}
@@ -751,16 +862,16 @@ class MatchRefresh extends React.Component {
                                                  </div>
                                                  <div  class="form-group">
                                                       <div class="col-xs-1">
-                                                     Stakes  <input class="form-control"  type="text" />
+                                                     Stakes  <input class="form-control"  value={this.state.selectedStakeVal || ''} type="text" />
                                                        </div>
                                                   </div>
-                                                   profit <p>0.00</p>
+                                                   profit <p>{this.state.profit_loss}</p>
 
 
                                                     {values.map((item,index)=>
                                                     
                                                     <div class="btn-group" key={index} role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-secondary">{item}</button>
+                                                    <button type="button" class="btn btn-dark"  onClick={() =>this.selectedStake(item)}>{item}</button>
                                                     </div>
                                                     )}
                                                     <div style={{marginTop:"5px"}}>
@@ -785,7 +896,7 @@ class MatchRefresh extends React.Component {
                                                  </div>
                                                  <div  class="form-group">
                                                       <div class="col-xs-1">
-                                                     Stakes  <input class="form-control"  type="text" />
+                                                     Stakes  <input class="form-control" value={this.state.selectedStakeVal || ''}  type="text" />
                                                        </div>
                                                   </div>
                                                    Liability <p>0.00</p>
@@ -794,7 +905,7 @@ class MatchRefresh extends React.Component {
                                                     {values.map((item,index)=>
                                                     
                                                     <div class="btn-group" key={index} role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-secondary">{item}</button>
+                                                    <button type="button" class="btn btn-secondary" onClick={() =>this.selectedStake(item)}>{item}</button>
                                                     </div>
                                                     )}
                                                     <div style={{marginTop:"5px"}}>
@@ -808,7 +919,7 @@ class MatchRefresh extends React.Component {
                                              }
 
                                                 </div>
-                                            }
+                                                }
 
 
 
@@ -817,6 +928,133 @@ class MatchRefresh extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                    {/* Listing Session or Market */}
+                                    <div className="col-12">
+
+ <div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+      <a class="btn-link collapsed" style={{fontSize: '18px'}} data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Un-match bets(0)
+        </a>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+        
+     </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <a class="btn-link collapsed" style={{fontSize: '18px'}} data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+         Match Bets ({marketbats.length>0 ? marketbats.length :0})
+        </a>
+      </h2>
+    </div>
+        { marketbats.length > 0 &&
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+
+
+      <table className="matchodd">
+  <thead>
+    <tr>
+      <th scope="col">Sr.No</th>
+      <th scope="col" style={{width:'60%'}}>Runner Name</th>
+      <th scope="col">Odds</th>
+      <th scope="col">Stakes</th>
+      <th scope="col">P&L</th>
+    </tr>
+  </thead>
+  <tbody>
+  {
+    marketbats.map((item,index)=>
+    
+     (item.is_back ===1) ?
+    <tr className="trblue" key={item.bat_id}>
+      <td style={{width:'10%'}}>{index+1}</td>
+      <td style={{width:'60%'}}>{item.runnerName} <p style={{margin:'0'}}>{item.getFormatedDate}</p></td>
+      <td style={{width:'10%'}}>{item.odds}</td>
+      <td style={{width:'10%'}}>{item.stack}</td>
+      <td style={{width:'10%'}}>{item.profit_loss}</td>
+    </tr>:(item.is_back ===0) ?
+    <tr className="trpink" key={item.bat_id}>
+      <td style={{width:'10%'}}>{index+1}</td>
+      <td style={{width:'60%'}}>{item.runnerName} <p style={{margin:'0'}}>{item.getFormatedDate}</p></td>
+      <td style={{width:'10%'}}>{item.odds}</td>
+      <td style={{width:'10%'}}>{item.stack}</td>
+      <td style={{width:'10%'}}>{item.profit_loss}</td>
+    </tr>:null
+   
+      )
+  }
+  
+ </tbody>
+</table>
+     
+      </div>
+    </div>
+    }
+
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <a class="btn-link collapsed" style={{fontSize: '18px'}} data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Fancy Bets ({fancybats.length > 0? fancybats.length:0})
+        </a>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+    
+       <table className="matchodd">
+  <thead>
+    <tr>
+      <th scope="col">Sr.No</th>
+      <th scope="col" style={{width:'60%'}}>Runner Name</th>
+      <th scope="col">Runs</th>
+      <th scope="col">Stakes</th>
+      <th scope="col">P&L</th>
+    </tr>
+  </thead>
+  <tbody>
+  {
+    fancybats.map((item,index)=>
+    (item.is_back ===1) ?
+    <tr className="trblue" key={item.bat_id}>
+      <td style={{width:'10%'}}>{index+1}</td>
+      <td style={{width:'60%'}}>{item.runnerName} <p style={{margin:'0'}}>{item.getFormatedDate}</p></td>
+      <td style={{width:'10%'}}>{item.session_run}</td>
+      <td style={{width:'10%'}}>{item.stack}</td>
+      <td style={{width:'10%'}}>{item.profit_loss}</td>
+    </tr>:(item.is_back ===0) ?
+    <tr className="trpink" key={item.bat_id}>
+      <td style={{width:'10%'}}>{index+1}</td>
+      <td style={{width:'60%'}}>{item.runnerName} <p style={{margin:'0'}}>{item.getFormatedDate}</p></td>
+      <td style={{width:'10%'}}>{item.session_run}</td>
+      <td style={{width:'10%'}}>{item.stack}</td>
+      <td style={{width:'10%'}}>{item.profit_loss}</td>
+    </tr>:null
+    )
+  }
+ </tbody>
+</table>
+     
+    
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+                                    </div>
+
                                 </div>
                             </div>
 

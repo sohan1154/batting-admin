@@ -378,3 +378,21 @@ export const getadvertisements = () => {
     updateHeaders();
     return axios.get(`/players/get-advertisements`).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
+//update stakes
+export const updateStakeData = (params) => {
+    updateHeaders();
+    return axios.post(`/settings/update-stakes`,params).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+//get user match bets
+export const GetMatchbatoddSession = (event_id) => {
+    
+    updateHeaders();
+    return axios.get(`/bats/user-match-bats/${event_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
+
+//update and save user bats
+
+export const NewBatsAddon = (params) => {
+    updateHeaders();
+    return axios.post(`/bats/save`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}

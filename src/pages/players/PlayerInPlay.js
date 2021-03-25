@@ -6,7 +6,6 @@ import * as ApisService from "../../providers/apis/apis";
 import { Roller } from "react-awesome-spinners";
 import SideMenuData from '../../components/elements/SideMenuData';
 import 'react-responsive-modal/styles.css';
-import Marquee from "react-fast-marquee";
 
 class PlayersInPlay extends React.Component {
 
@@ -83,7 +82,6 @@ class PlayersInPlay extends React.Component {
                     GlobalProvider.errorMessage(response.message);
                 }
 
-                GlobalProvider.loadDataTable();
 
             }).catch(error => {
                 this.setState({
