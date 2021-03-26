@@ -1125,7 +1125,7 @@ class MatchRefresh extends React.Component {
                                                 <td style={{ width: '60%' }}>{item.runnerName} <p style={{ margin: '0' }}>{item.getFormatedDate}</p></td>
                                                 <td style={{ width: '10%' }}>{item.odds}</td>
                                                 <td style={{ width: '10%' }}>{item.stack}</td>
-                                                <td style={{ width: '10%' }}>{item.profit_loss}</td>
+                                                <td style={{ width: '10%' }}>-{item.profit_loss}</td>
                                               </tr> : null
 
                                         )
@@ -1176,7 +1176,7 @@ class MatchRefresh extends React.Component {
                                               <td style={{ width: '60%' }}>{item.runnerName} <p style={{ margin: '0' }}>{item.getFormatedDate}</p></td>
                                               <td style={{ width: '10%' }}>{item.session_run}</td>
                                               <td style={{ width: '10%' }}>{item.stack}</td>
-                                              <td style={{ width: '10%' }}>{item.profit_loss}</td>
+                                              <td style={{ width: '10%' }}>-{item.profit_loss}</td>
                                             </tr> : null
                                       )
                                     }
