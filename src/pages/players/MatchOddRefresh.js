@@ -20,10 +20,12 @@ class MatchRefresh extends React.Component {
             score:{
                 home:{
                     inning1:{runs: "", wickets: "", overs: ""},
+                    inning2:{runs: "", wickets: "", overs: ""},
                     gameSequence:[]
                 },
                 away:{
                     inning1:{runs: "", wickets: "", overs: ""},
+                    inning2:{runs: "", wickets: "", overs: ""},
                     gameSequence:[]
                 }
             },
@@ -43,6 +45,9 @@ class MatchRefresh extends React.Component {
             disabled: true,
             marketbats:[],
             fancybats:[],
+            market_wise_profit_loss_info:[{profit_loss:""}],
+            session_wise_profit_loss_info:[],
+            user_available_credit:""
         }
     }
 
@@ -52,7 +57,8 @@ class MatchRefresh extends React.Component {
         var data=JSON.parse(sessionStorage.getItem("user"));
         this.setState({values:data.stakes});
         this.getMatchRefresh(event_id);
-        this.getMatchBatlist(event_id)
+        this.getMatchBatlist(event_id);
+        
     }
     onHideShow=()=> {
         this.setState({ showResults: true });
@@ -114,16 +120,45 @@ class MatchRefresh extends React.Component {
         
 
     }
-    onHideUpade=()=> {
-        console.log(this.state.fulldata);
-        this.newBatsAddon(this.state.fulldata);
+    onShowSession=(type,value,valuetype,bat_type,event_id,selectionId,session_run,session_size,isback)=> {
+        this.setState({ showStakes: true });
+        this.setState({ staketype: type });
+        this.setState({ stakesval: value });
+        this.setState({ stakesvaltype: valuetype });
+        this.setState({selectedStakeVal:''})
+
+        this.setState({datasession:{
+            "bat_type": bat_type,
+            "event_id": event_id,
+            "selectionId": selectionId,
+            "session_run": session_run,
+            "session_size": session_size,
+            "is_back": isback
+        }
+        });
         
+
+    }
+
+    onHideUpade=()=> {
+        console.log(this.state.fulldata.bat_type);
+        console.log(this.state.fulldatasession.bat_type);
+        if(this.state.fulldatasession.bat_type=="session"){
+             this.newBatsAddon(this.state.fulldatasession);
+        
+        }
+        else if(this.state.fulldata.bat_type=="odd"){
+            this.newBatsAddon(this.state.fulldata);
+        
+        }
+      
         //this.setState({ showStakes: false });
     }
     selectedStake=(val)=>{
         this.setState({ selectedStakeVal: val });
         
         this.setState({ fulldata:{stack:val, ...this.state.data} });
+        this.setState({ fulldatasession:{stack:val, ...this.state.datasession} });
 
         this.setState({ profit_loss: (((this.state.stakesval-1)*val)-val) });
         
@@ -149,6 +184,7 @@ class MatchRefresh extends React.Component {
                         markets:response.markets,
                         sessions:response.sessions
                     });
+                    this.getMatchScore(event_id);
                 } else {
                    
                     this.setState({
@@ -202,7 +238,7 @@ class MatchRefresh extends React.Component {
             });
     }
 
-
+    
     newBatsAddon = (params) => {
         console.log(params);
         this.setState({
@@ -225,6 +261,45 @@ class MatchRefresh extends React.Component {
             });
     }
 
+
+
+    getMatchScore = (event_id) => {
+        
+        this.setState({
+            loading: true,
+            errors: {},
+        });
+
+        ApisService.GetMatchscore(event_id)
+            .then(response => {
+                
+                if (response.status) {
+                    this.setState({
+                        loading: false,
+                        market_wise_profit_loss_info:response.market_wise_profit_loss_info,
+                        session_wise_profit_loss_info:response.session_wise_profit_loss_info,
+                        user_available_credit:response.user_available_credit
+                    });
+                } else {
+                   
+                    this.setState({
+                        loading: false,
+                    });
+                    GlobalProvider.errorMessage(response.message);
+                }
+
+            }).catch(error => {
+                
+                this.setState({
+                    loading: false,
+                });
+                GlobalProvider.errorMessage(error);
+            });
+    }
+
+creaditAmount(){
+
+}
     handleSubmit(event) {
         event.preventDefault();
       }
@@ -234,7 +309,7 @@ class MatchRefresh extends React.Component {
         this.setState({ values });
      } 
     render() {
-        const { marketbats,fancybats,score,eventTypeId,matchType,sessions, markets,loading, values,open, errors,stakesval,value,staketype,stakesvaltype,selectedStakeVal } = this.state;
+        const {user_available_credit,market_wise_profit_loss_info, session_wise_profit_loss_info,marketbats,fancybats,score,eventTypeId,matchType,sessions, markets,loading, values,open, errors,stakesval,value,staketype,stakesvaltype,selectedStakeVal } = this.state;
         let count = 1;
       
         return (
@@ -285,48 +360,70 @@ class MatchRefresh extends React.Component {
                                                 </nav>
                                                 <div className="container">
                                                 <div className="row" style={{innerHeight:'20px'}}>
-                                                      {(score.home.inning1!=undefined) &&
+                                                      {(score.home.inning1!=undefined && score.home.inning2==undefined) ?
                                                         <div className="col"><p style={{marginTop:"15px"}}> <span>{score.home.name} - </span>
                                                         <span>
                                                         {
                                                            score.home.inning1.runs  
                                                         }/{score.home.inning1.wickets} ({score.home.inning1.overs})
-                                                        </span> </p></div>
-
-                                                      }
-                                                      {(score.home.inning1==undefined) &&
+                                                        </span>
+                                                         </p></div>:(score.home.inning1==undefined)?
                                                         <div className="col"><p style={{marginTop:"15px"}}> <span>{score.home.name} - </span>
                                                         <span>
                                                         {
                                                            0 
                                                         }/{0} ({0})
-                                                        </span> </p></div>
+                                                        </span> </p></div>:
 
-                                                      }
-
-
-                                                      {(score.away.inning1!==undefined) &&
-                                                       
-                                                        <div className="col"><p style={{marginTop:"15px",float:"right"}}> <span>{score.away.name} - </span>
+                                                    (score.home.inning1!=undefined && score.home.inning2!=undefined)?
+                                                        <div className="col" style={{fontSize:"smaller"}}><p style={{marginTop:"15px"}}> <span>{score.home.name} - </span>
                                                         <span>
+                                                        {
+                                                           score.home.inning2.runs  
+                                                        }/{score.home.inning2.wickets} ({score.home.inning2.overs})
+                                                        </span>
+                                                        <span>
+                                                        {
+                                                           score.home.inning1.runs  
+                                                        }/{score.home.inning1.wickets} ({score.home.inning1.overs})
+                                                        </span>
+                                                         </p></div>:null
 
-                                                         {score.away.inning1.runs}
-                                                        /{score.away.inning1.wickets} 
-                                                        ({score.away.inning1.overs})
-
-                                                        </span></p></div>
+                                                      
                                                       }
-                                                      {(score.away.inning1==undefined) &&
-                                                       
-                                                       <div className="col"><p style={{marginTop:"15px",float:"right"}}> <span>{score.away.name} - </span>
-                                                       <span>
+                                       
 
-                                                        {0}
-                                                       /{0} 
-                                                       ({0})
+                                                      {(score.away.inning1!=undefined && score.away.inning2==undefined) ?
+                                                        <div className="col"><p style={{marginTop:"15px"}}> <span>{score.away.name} - </span>
+                                                        <span>
+                                                        {
+                                                           score.away.inning1.runs  
+                                                        }/{score.away.inning1.wickets} ({score.away.inning1.overs})
+                                                        </span>
+                                                         </p></div>:(score.away.inning1==undefined)?
+                                                        <div className="col"><p style={{marginTop:"15px"}}> <span>{score.away.name} - </span>
+                                                        <span>
+                                                        {
+                                                           0 
+                                                        }/{0} ({0})
+                                                        </span> </p></div>:
 
-                                                       </span></p></div>
-                                                     }
+                                                    (score.away.inning1!=undefined && score.away.inning2!=undefined)?
+                                                        <div className="col" style={{fontSize:"smaller"}}><p style={{marginTop:"15px"}}> <span>{score.away.name} - </span>
+                                                        <span>
+                                                        {
+                                                           score.away.inning2.runs  
+                                                        }/{score.away.inning2.wickets} ({score.away.inning2.overs})
+                                                        </span>
+                                                        <span>
+                                                        {
+                                                           score.away.inning1.runs  
+                                                        }/{score.away.inning1.wickets} ({score.away.inning1.overs})
+                                                        </span>
+                                                         </p></div>:null
+
+                                                      
+                                                      }
                                                 </div>
                                                 </div>
                                                
@@ -355,7 +452,13 @@ class MatchRefresh extends React.Component {
 
                                                         {markets[0].runners.map((item, index) =>
                                                                 <tr key={item.market_runner_id} id={'RecordID_' + item.market_runner_id}>
-                                                                    <td style={{width:'40%'}}> {item.runnerName}</td>
+                                                                   
+                                                                    <td style={{width:'40%'}}> {item.runnerName}       
+                                                                     { <p>[ {(typeof market_wise_profit_loss_info[item.market_runner_id] !== 'undefined' && market_wise_profit_loss_info[item.market_runner_id].profit_loss)} ] </p>           }                                                    
+                                                                    <p>
+                                                                    
+                                                                    </p>
+                                                                    </td>
                                                                      
                                                                     {      
                                                                       item.prices.map((val,index) =>
@@ -363,11 +466,11 @@ class MatchRefresh extends React.Component {
                                                                         <td className="td_bg_bluelight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td> 
                                                                        :(index ==2)?
 
-                                                                        <td className="td_bg_blue" onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[0].event_id,markets[0].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_blue pointer" onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[0].event_id,markets[0].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        
                                                                        :(index ==3)?
 
-                                                                        <td className="td_bg_pink"  onClick={() => this.onShow(item.runnerName,val.price,"Lay","odd",markets[0].event_id,markets[0].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_pink pointer"  onClick={() => this.onShow(item.runnerName,val.price,"Lay","odd",markets[0].event_id,markets[0].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        
                                                                        :<td className="td_bg_pinklight" style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                       
@@ -379,7 +482,6 @@ class MatchRefresh extends React.Component {
                                                             )}
 
                                                            
-
                                                         </tbody>
                                                     </table>
                                               }{ markets[1]!=undefined &&
@@ -403,9 +505,9 @@ class MatchRefresh extends React.Component {
                                                                       (index <2)?
                                                                         <td className="td_bg_bluelight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td> 
                                                                        :(index ==2)?
-                                                                        <td className="td_bg_blue" onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[1].event_id,markets[1].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_blue pointer" onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[1].event_id,markets[1].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :(index ==3)?
-                                                                        <td className="td_bg_pink" onClick={() =>this.onShow(item.runnerName,val.price,"Lay","odd",markets[1].event_id,markets[1].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_pink pointer" onClick={() =>this.onShow(item.runnerName,val.price,"Lay","odd",markets[1].event_id,markets[1].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :<td className="td_bg_pinklight" style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                       
                                                                      
@@ -439,9 +541,9 @@ class MatchRefresh extends React.Component {
                                                                       (index <2)?
                                                                         <td className="td_bg_bluelight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td> 
                                                                        :(index ==2)?
-                                                                        <td className="td_bg_blue"  onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[2].event_id,markets[2].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_blue pointer"  onClick={() =>this.onShow(item.runnerName,val.price,"Back","odd",markets[2].event_id,markets[2].marketId,item.selectionId,item.market_runner_id,1)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :(index ==3)?
-                                                                        <td className="td_bg_pink"  onClick={() =>this.onShow(item.runnerName,val.price,"Lay","odd",markets[2].event_id,markets[2].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
+                                                                        <td className="td_bg_pink pointer"  onClick={() =>this.onShow(item.runnerName,val.price,"Lay","odd",markets[2].event_id,markets[2].marketId,item.selectionId,item.market_runner_id,0)} style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                        :<td className="td_bg_pinklight"  style={{textAlign:"center"}}>{val.price}<p>{val.size}</p></td>
                                                                       
                                                                      
@@ -478,25 +580,59 @@ class MatchRefresh extends React.Component {
                                             <div className="card-body">
                                                 <div className="table-responsive p-t-10">
                                                     <p>Session Runs</p>
-                                                <table id="listingTable3" className="table " style={{ width: "100%" }}>
-                                                      
-                                                        <tbody>
+                        
+                                                    <div className="row" style={{width:'99%'}}>
+                                                            <div className="col-7"></div>
+                                                            <div className="col">No</div>
+                                                            <div className="col">Yes</div>
+                                                    </div>
+                                                 <div className="container">
+                                                 {sessions.map((item, index) =>
 
-                                                        {sessions.map((item, index) =>
-                                                                <tr key={item.session_id} id={'RecordID_' + item.session_id} style={{height:'30px'}}>
-                                                                
-                                                                    <td style={{width:'40%'}}> {item.RunnerName}</td>           
-                                                                    <td className="td_bg_pink"   onClick={() =>this.onShow(item.RunnerName +" No",item.LayPrice1,"Lay")} style={{textAlign:"center"}}>{item.LayPrice1}<p>{item.LaySize1}</p></td>
-                                                                    <td className="td_bg_blue" onClick={() =>this.onShow(item.RunnerName +" Yes",item.BackPrice1,"Back")} style={{textAlign:"center"}}>{item.BackPrice1}<p>{item.BackSize1}</p></td>
+                                                   
+                                                    <div className="row" key={item.session_id} id={'RecordID_' + item.session_id}>
+                                                        <div className="col sessionlist" >
+                                                            {item.RunnerName} <span><i className="icon-placeholder pointer sessionicon mdi mdi-view-list" data-toggle="collapse" data-target={"#multiCollapseExample"+index} aria-expanded="false" aria-controls={"multiCollapseExample"+index}></i></span>
+                                                        </div>
+                                                
+                                                        <div className="col">
+                                                        <div className="container">
+                                                        
+                                                            <div className="row">
+                                                            <div className="col pointer sessionlist trpink" onClick={() => this.onShowSession(item.runnerName,10,"Lay","session",item.event_id,item.SelectionId,item.LayPrice1,item.LaySize1,0)}>{item.LayPrice1}<p>{item.LaySize1}</p></div>
+                                                            <div className="col pointer sessionlist trblue" onClick={() => this.onShowSession(item.runnerName,10,"Back","session",item.event_id,item.SelectionId,item.BackPrice1,item.BackSize1,1)}>{item.BackPrice1}<p>{item.BackSize1}</p></div>
+                                                            </div>
+                                                         </div>
+                                                         {  session_wise_profit_loss_info.map((item2, index2) =>(item.session_id==item2.match_session_id) ? 
+                                                            
+                                                             <table style={{width:'100%'}} className="matchodd collapse multi-collapse" id={"multiCollapseExample"+index}>
+                                                             <thead>
+                                                                <tr>
+                                                                <th scope="col">Runs</th>
+                                                                <th scope="col">P&L</th>
+                                                                </tr>
+                                                            </thead>
+                                                                <tbody>
+                                                                {item2.bats.map((item3, index3) =>
+                                                                <tr className="trdarkwhite">
+                                                                <td>{item3[0]}</td>
+                                                                <td>{item3[1]}</td> 
                                                                 </tr>
                                                             )}
+                                                            </tbody>
+                                                            </table>
+                                                            
+     
+                                                            :null
 
-                                                           
+                                                            )}
+                                                            
 
-                                                        </tbody>
-                                                    </table>
-                                                 
-
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    )}
+                                                 </div>
 
 
                                                 </div>
@@ -822,7 +958,9 @@ class MatchRefresh extends React.Component {
                                 <div className="row">
                                     <div className="col-12">
                                         <div className="card">
-
+                                        <nav class="navbar navbar-light bg-light">
+                                        <a class="navbar-brand">Available Credits ({this.state.user_available_credit})</a>
+                                        </nav>
                                             <div className="card-body">
                                                 <div className="table-responsive p-t-10">
                                               
