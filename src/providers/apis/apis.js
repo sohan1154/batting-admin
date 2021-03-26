@@ -13,7 +13,7 @@ function updateHeaders() {
 }
 
 function readError(error) {
-    console.log('error:::', error)
+    // console.log('error:::', error)
 
     let message;
     let errorMsg = error;
@@ -41,7 +41,7 @@ function readError(error) {
 }
 
 function readResponse(response) {
-    console.log('response::::', response.data);
+    // console.log('response::::', response.data);
     return response.data;
 }
 
