@@ -92,3 +92,18 @@ width: 20%;
 .trpink{
   background: #fac9d1;
 }
+.sessionlist{
+  border: 1px solid #f4f7f5;
+  text-align: center;
+   
+}
+.trdarkwhite{
+  background: #f7fbff;
+}
+.pointer{
+  cursor: pointer;
+}
+.sessionicon{
+  float: right;
+  margin-top: 15px;
+}

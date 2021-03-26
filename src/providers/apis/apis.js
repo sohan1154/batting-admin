@@ -396,3 +396,10 @@ export const NewBatsAddon = (params) => {
     updateHeaders();
     return axios.post(`/bats/save`, params).then(response => readResponse(response)).catch(error => { throw readError(error); });
 }
+
+//get user match score
+export const GetMatchscore = (event_id) => {
+    
+    updateHeaders();
+    return axios.get(`/bats/user-match-score/${event_id}`).then(response => readResponse(response)).catch(error => { throw readError(error); });
+}
