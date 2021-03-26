@@ -107,3 +107,9 @@ width: 20%;
   float: right;
   margin-top: 15px;
 }
+.textRed {
+  color: red;
+}
+.textGreen {
+  color: green;
+}

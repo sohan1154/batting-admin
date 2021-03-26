@@ -18,7 +18,7 @@ class SideMenuData extends React.Component {
             }
         })
 
-        console.log('activePath:', activePath)
+        // console.log('activePath:', activePath)
 
         this.state = {
             activePath: activePath,
@@ -48,16 +48,20 @@ class SideMenuData extends React.Component {
                 <div className="admin-sidebar-wrapper js-scrollbar">
                     <ul className="menu">
 
-                        <li className={activePath == '/dashboard' ? 'menu-item active opened' : 'menu-item'}>
-                            <a href="/dashboard" className=" menu-link">
-                                <span className="menu-label">
-                                    <span className="menu-name">Dashboard</span>
-                                </span>
-                                <span className="menu-icon">
-                                    <i className="icon-placeholder mdi mdi-shape-outline "></i>
-                                </span>
-                            </a>
-                        </li>
+                        {currentUser.role != 'Player' &&
+                            <>
+                                <li className={activePath == '/dashboard' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/dashboard" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Dashboard</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-shape-outline "></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </>
+                        }
 
                         {currentUser.role == 'Admin' &&
                             <>
@@ -139,6 +143,7 @@ class SideMenuData extends React.Component {
                                         </span>
                                     </a>
                                 </li>
+
                                 <li className={activePath == '/edit-globlesetting' ? 'menu-item active opened' : 'menu-item'}>
                                     <a href="/edit-globlesetting" className=" menu-link">
                                         <span className="menu-label">
@@ -199,6 +204,39 @@ class SideMenuData extends React.Component {
                                         </li>
                                     </ul>
                                 </li>
+
+                                <li className={activePath == '/sports-listing' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/sports-listing" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Sports</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-trophy"></i>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li className={activePath == '/series-listing' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/series-listing" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Series</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-view-list"></i>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li className={activePath == '/matches-listing' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/matches-listing" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Matches</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-view-list"></i>
+                                        </span>
+                                    </a>
+                                </li>
                             </>
                         }
 
@@ -249,11 +287,40 @@ class SideMenuData extends React.Component {
                                         </li>
                                     </ul>
                                 </li>
-                            </>
-                        }
 
-                        {(currentUser.role == 'Master' || currentUser.role == 'Player') &&
-                            <>
+                                <li className={activePath == '/sports-listing' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/sports-listing" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Sports</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-trophy"></i>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li className={activePath == '/series-listing' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/series-listing" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Series</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-view-list"></i>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li className={activePath == '/matches-listing' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/matches-listing" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Matches</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-view-list"></i>
+                                        </span>
+                                    </a>
+                                </li>
+
                                 <li className={activePath == '/credits-history' ? 'menu-item active opened' : 'menu-item'}>
                                     <a href="/credits-history" className=" menu-link">
                                         <span className="menu-label">
@@ -264,10 +331,26 @@ class SideMenuData extends React.Component {
                                         </span>
                                     </a>
                                 </li>
+                            </>
+                        }
+
+                        {(currentUser.role == 'Player') &&
+                            <>
                                 <li className={activePath == '/inplay' ? 'menu-item active opened' : 'menu-item'}>
                                     <a href="/inplay" className=" menu-link">
                                         <span className="menu-label">
-                                            <span className="menu-name">Inplay</span>
+                                            <span className="menu-name">Dashboard</span>
+                                        </span>
+                                        <span className="menu-icon">
+                                            <i className="icon-placeholder mdi mdi-shape-outline "></i>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li className={activePath == '/credits-history' ? 'menu-item active opened' : 'menu-item'}>
+                                    <a href="/credits-history" className=" menu-link">
+                                        <span className="menu-label">
+                                            <span className="menu-name">Credits History</span>
                                         </span>
                                         <span className="menu-icon">
                                             <i className="icon-placeholder mdi mdi-coins "></i>
