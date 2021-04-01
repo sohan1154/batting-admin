@@ -3,7 +3,7 @@ import * as SiteSettings from '../../providers/settings/settings';
 
 // handle the footer section
 class Footer extends React.Component {
-
+   
     render() {
         return (
             <div className="copyfootbar">
@@ -13,5 +13,6 @@ class Footer extends React.Component {
         )
     }
 }
+
 
 export default Footer;

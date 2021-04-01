@@ -6,13 +6,16 @@ import * as ApisService from "../../providers/apis/apis";
 import { Roller } from "react-awesome-spinners";
 import SideMenuData from '../../components/elements/SideMenuData';
 import 'react-responsive-modal/styles.css';
+//Socket Io
+import io from "socket.io-client";
+
 
 class MatchRefresh extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
+      connected:false,
       entries: [],
       eventTypeId: "",
       matchType: "",
@@ -52,12 +55,30 @@ class MatchRefresh extends React.Component {
   }
 
   componentDidMount() {
-
     let event_id = this.props.match.params.id;
+    const socket = io("http://localhost:3002",{'forceNew':true, query: "foo="+event_id });
+
+    console.log(socket);
+    socket.on("event",(data)=>{
+     console.log("===============");
+     console.log(data);
+        this.setState({
+          loading: false,
+          score: (data.score),
+          eventTypeId: data.eventTypeId,
+          matchType: data.matchType,
+          markets: data.markets,
+          sessions: data.sessions
+        });
+          
+        });
+
+   
     var data = JSON.parse(sessionStorage.getItem("user"));
     this.setState({ values: data.stakes });
-    this.getMatchRefresh(event_id);
-    this.getMatchBatlist(event_id);
+   // this.getMatchRefresh(event_id);
+    this.getMatchBatlist(event_id)
+    this.getMatchScore(event_id);
 
   }
   onHideShow = () => {
@@ -66,7 +87,10 @@ class MatchRefresh extends React.Component {
   onUpdate = () => {
     this.updateStake({ stakes: this.state.values });
   }
-
+    timer=()=>{
+     // alert();
+      this.setState({ timeResults: Date().toLocaleString() });
+    }
   updateStake(param) {
 
     const { currentUser } = this.state;
@@ -168,6 +192,7 @@ class MatchRefresh extends React.Component {
 
   getMatchRefresh = (event_id) => {
     console.log(event_id);
+   // alert(event_id)
     this.setState({
       loading: true,
       errors: {},
@@ -177,7 +202,7 @@ class MatchRefresh extends React.Component {
       .then(response => {
 
         if (response.status) {
-          console.log(response.score.home);
+          console.log(response);
           this.setState({
             loading: false,
             score: (response.score),
@@ -186,7 +211,7 @@ class MatchRefresh extends React.Component {
             markets: response.markets,
             sessions: response.sessions
           });
-          this.getMatchScore(event_id);
+          
         } else {
 
           this.setState({
@@ -195,7 +220,7 @@ class MatchRefresh extends React.Component {
           GlobalProvider.errorMessage(response.message);
         }
 
-        GlobalProvider.loadDataTable();
+        //GlobalProvider.loadDataTable();
 
       }).catch(error => {
         console.log(error);
@@ -959,7 +984,7 @@ class MatchRefresh extends React.Component {
                       <div className="col-12">
                         <div className="card">
                           <nav class="navbar navbar-light bg-light">
-                            <a class="navbar-brand">Available Credits ({this.state.user_available_credit})</a>
+                            <a class="navbar-brand">Available Credits ({this.state.user_available_credit}) {this.state.timeResults}</a>
                           </nav>
                           <div className="card-body">
                             <div className="table-responsive p-t-10">

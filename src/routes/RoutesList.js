@@ -6,6 +6,8 @@ import Signup from '../pages/signup/Signup';
 import Contact from '../pages/contact/Contact';
 import Dashboard from '../pages/dashboard/Dashboard';
 import Home from '../pages/home/Home';
+import socketTest from '../pages/testpage/socketdata';
+
 
 // settings 
 import EditProfile from '../pages/settings/EditProfile';
@@ -68,6 +70,7 @@ class RoutesList extends React.Component {
           <PublicRoute path="/signup" component={Signup} />
           <PublicRoute path="/login" component={Login} />
           <PublicRoute path="/contact" component={Contact} />
+          <PublicRoute path="/socket-test" component={socketTest} />
           <PrivateRoute path="/dashboard" component={Dashboard} />
 
           {/* settings */}
