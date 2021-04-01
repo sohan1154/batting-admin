@@ -486,16 +486,16 @@ class MatchRefresh extends React.Component {
                                                           {
                                                             item.prices.map((val, index) =>
                                                               (index < 2) ?
-                                                                <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                                 : (index == 2) ?
 
-                                                                  <td className="td_bg_blue pointer" onClick={() => this.onShow(item.runnerName, val.price, "Back", "odd", markets[0].event_id, markets[0].marketId, item.selectionId, item.market_runner_id, 1)} style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                  <td className="td_bg_blue pointer" onClick={() => this.onShow(item.runnerName, val.price, "Back", "odd", markets[0].event_id, markets[0].marketId, item.selectionId, item.market_runner_id, 1)} style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
                                                                   : (index == 3) ?
 
-                                                                    <td className="td_bg_pink pointer" onClick={() => this.onShow(item.runnerName, val.price, "Lay", "odd", markets[0].event_id, markets[0].marketId, item.selectionId, item.market_runner_id, 0)} style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                    <td className="td_bg_pink pointer" onClick={() => this.onShow(item.runnerName, val.price, "Lay", "odd", markets[0].event_id, markets[0].marketId, item.selectionId, item.market_runner_id, 0)} style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
-                                                                    : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                    : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
 
                                                             )
@@ -526,12 +526,12 @@ class MatchRefresh extends React.Component {
                                                           {
                                                             item.prices.map((val, index) =>
                                                               (index < 2) ?
-                                                                <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                                 : (index == 2) ?
-                                                                  <td className="td_bg_blue pointer" onClick={() => this.onShow(item.runnerName, val.price, "Back", "odd", markets[1].event_id, markets[1].marketId, item.selectionId, item.market_runner_id, 1)} style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                  <td className="td_bg_blue pointer" onClick={() => this.onShow(item.runnerName, val.price, "Back", "odd", markets[1].event_id, markets[1].marketId, item.selectionId, item.market_runner_id, 1)} style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                                   : (index == 3) ?
-                                                                    <td className="td_bg_pink pointer" onClick={() => this.onShow(item.runnerName, val.price, "Lay", "odd", markets[1].event_id, markets[1].marketId, item.selectionId, item.market_runner_id, 0)} style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
-                                                                    : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                    <td className="td_bg_pink pointer" onClick={() => this.onShow(item.runnerName, val.price, "Lay", "odd", markets[1].event_id, markets[1].marketId, item.selectionId, item.market_runner_id, 0)} style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
+                                                                    : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
 
                                                             )
@@ -562,12 +562,12 @@ class MatchRefresh extends React.Component {
                                                         {
                                                           item.prices.map((val, index) =>
                                                             (index < 2) ?
-                                                              <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                              <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                               : (index == 2) ?
-                                                                <td className="td_bg_blue pointer" onClick={() => this.onShow(item.runnerName, val.price, "Back", "odd", markets[2].event_id, markets[2].marketId, item.selectionId, item.market_runner_id, 1)} style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                <td className="td_bg_blue pointer" onClick={() => this.onShow(item.runnerName, val.price, "Back", "odd", markets[2].event_id, markets[2].marketId, item.selectionId, item.market_runner_id, 1)} style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                                 : (index == 3) ?
-                                                                  <td className="td_bg_pink pointer" onClick={() => this.onShow(item.runnerName, val.price, "Lay", "odd", markets[2].event_id, markets[2].marketId, item.selectionId, item.market_runner_id, 0)} style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
-                                                                  : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                                  <td className="td_bg_pink pointer" onClick={() => this.onShow(item.runnerName, val.price, "Lay", "odd", markets[2].event_id, markets[2].marketId, item.selectionId, item.market_runner_id, 0)} style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
+                                                                  : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
 
                                                           )
@@ -768,12 +768,12 @@ class MatchRefresh extends React.Component {
                                                   {
                                                     item.prices.map((val, index) =>
                                                       (index < 2) ?
-                                                        <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                        <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                         : (index == 2) ?
-                                                          <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                          <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                           : (index == 3) ?
-                                                            <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
-                                                            : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                            <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
+                                                            : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
                                                     )
 
@@ -864,12 +864,12 @@ class MatchRefresh extends React.Component {
                                                     {
                                                       item.prices.map((val, index) =>
                                                         (index < 2) ?
-                                                          <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                          <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                           : (index == 2) ?
-                                                            <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                            <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                             : (index == 3) ?
-                                                              <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
-                                                              : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                              <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
+                                                              : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
 
                                                       )
@@ -904,12 +904,12 @@ class MatchRefresh extends React.Component {
                                                     {
                                                       item.prices.map((val, index) =>
                                                         (index < 2) ?
-                                                          <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                          <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                           : (index == 2) ?
-                                                            <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                            <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                             : (index == 3) ?
-                                                              <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
-                                                              : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                              <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
+                                                              : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
 
                                                       )
@@ -942,12 +942,12 @@ class MatchRefresh extends React.Component {
                                                     {
                                                       item.prices.map((val, index) =>
                                                         (index < 2) ?
-                                                          <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                          <td className="td_bg_bluelight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                           : (index == 2) ?
-                                                            <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                            <td className="td_bg_blue" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
                                                             : (index == 3) ?
-                                                              <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
-                                                              : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<p>{val.size}</p></td>
+                                                              <td className="td_bg_pink" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
+                                                              : <td className="td_bg_pinklight" style={{ textAlign: "center" }}>{val.price}<br /><small>{val.size}</small></td>
 
 
                                                       )
