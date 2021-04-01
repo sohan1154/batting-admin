@@ -2,6 +2,7 @@ import React from 'react';
 import * as SiteSettings from '../../providers/settings/settings';
 import * as Permissions from '../../providers/settings/permissions';
 import * as GlobalProvider from '../../providers/globals/globals';
+import * as GlobalConfig from '../../providers/globals/config';
 
 // handle the side-menu section
 class SideMenuData extends React.Component {
@@ -35,8 +36,8 @@ class SideMenuData extends React.Component {
             <aside className="admin-sidebar">
                 <div className="admin-sidebar-brand">
                     {/* <!-- begin sidebar branding--> */}
-                    <img className="admin-brand-logo" src="/assets/logos/logo.png" width="80" alt={SiteSettings.appName} />
-                    <span className="admin-brand-content font-secondary"><a href="/dashboard">{SiteSettings.appName}</a></span>
+                    <img className="admin-brand-logo" src="/assets/logos/logo.png" width="80" alt={GlobalConfig.appName} />
+                    <span className="admin-brand-content font-secondary"><a href="/dashboard">{GlobalConfig.appName}</a></span>
                     {/* <!-- end sidebar branding--> */}
                     <div className="ml-auto">
                         {/* <!-- sidebar pin--> */}

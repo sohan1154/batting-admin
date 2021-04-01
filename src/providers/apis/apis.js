@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as GlobalProvider from '../globals/globals';
+import * as GlobalConfig from '../globals/config';
 
-//axios.defaults.baseURL = 'http://localhost:3001';
- axios.defaults.baseURL = 'http://172.104.41.239:3001';
+ axios.defaults.baseURL = GlobalConfig.baseURL;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 function updateHeaders() {

@@ -1,5 +1,6 @@
 import React from 'react';
 import * as GlobalProvider from '../../providers/globals/globals';
+import * as GlobalConfig from '../../providers/globals/config';
 import Header from '../../components/elements/Header';
 import RecordNotFound from '../../components/elements/RecordNotFound';
 import * as ApisService from "../../providers/apis/apis";
@@ -15,7 +16,7 @@ class MatchRefresh extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      connected:false,
+      connected: false,
       entries: [],
       eventTypeId: "",
       matchType: "",
@@ -56,27 +57,24 @@ class MatchRefresh extends React.Component {
 
   componentDidMount() {
     let event_id = this.props.match.params.id;
-    const socket = io("http://localhost:3002",{'forceNew':true, query: "foo="+event_id });
+    const socket = io(GlobalConfig.socketURL, { "forceNew": true, query: "eventID=" + event_id });
 
     console.log(socket);
-    socket.on("event",(data)=>{
-     console.log("===============");
-     console.log(data);
-        this.setState({
-          loading: false,
-          score: (data.score),
-          eventTypeId: data.eventTypeId,
-          matchType: data.matchType,
-          markets: data.markets,
-          sessions: data.sessions
-        });
-          
-        });
+    socket.on("UserMatchOdds", (data) => {
+      console.log(data);
+      this.setState({
+        loading: false,
+        score: (data.score),
+        eventTypeId: data.eventTypeId,
+        matchType: data.matchType,
+        markets: data.markets,
+        sessions: data.sessions
+      });
+    });
 
-   
     var data = JSON.parse(sessionStorage.getItem("user"));
     this.setState({ values: data.stakes });
-   // this.getMatchRefresh(event_id);
+    // this.getMatchRefresh(event_id);
     this.getMatchBatlist(event_id)
     this.getMatchScore(event_id);
 
@@ -87,10 +85,10 @@ class MatchRefresh extends React.Component {
   onUpdate = () => {
     this.updateStake({ stakes: this.state.values });
   }
-    timer=()=>{
-     // alert();
-      this.setState({ timeResults: Date().toLocaleString() });
-    }
+  timer = () => {
+    // alert();
+    this.setState({ timeResults: Date().toLocaleString() });
+  }
   updateStake(param) {
 
     const { currentUser } = this.state;
@@ -192,7 +190,7 @@ class MatchRefresh extends React.Component {
 
   getMatchRefresh = (event_id) => {
     console.log(event_id);
-   // alert(event_id)
+    // alert(event_id)
     this.setState({
       loading: true,
       errors: {},
@@ -211,7 +209,7 @@ class MatchRefresh extends React.Component {
             markets: response.markets,
             sessions: response.sessions
           });
-          
+
         } else {
 
           this.setState({
@@ -616,7 +614,7 @@ class MatchRefresh extends React.Component {
 
                                                     <div className="row" key={item.session_id} id={'RecordID_' + item.session_id}>
                                                       <div className="col sessionlist" >
-                                                        {item.RunnerName} 
+                                                        {item.RunnerName}
                                                         <span><i className="icon-placeholder pointer sessionicon mdi mdi-view-list" data-toggle="collapse" data-target={"#multiCollapseExample" + index} aria-expanded="false" aria-controls={"multiCollapseExample" + index}></i></span>
                                                         {<p className="textRed">{(typeof session_wise_profit_loss_info[item.session_id] !== 'undefined' && 'Max Exposure: ' + session_wise_profit_loss_info[item.session_id].max_exposure)}</p>}
                                                       </div>
